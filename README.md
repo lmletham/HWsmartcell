@@ -3,6 +3,7 @@ Livebook smartcell for homework problems
 
 
 # Code for the Startup Cell
+```elixir
 Mix.install([
   {:kino, "~> 0.13.2"},
   {:earmark, "~> 1.4.47"},
@@ -10,3 +11,7 @@ Mix.install([
   {:makeup_elixir, "~> 0.7"},
   {:hwsmartcell, github: "lmletham/HWsmartcell", override: true}
 ])
+
+#Ensure the smartcell is registered
+Kino.SmartCell.register(Hwsmartcell)
+```
