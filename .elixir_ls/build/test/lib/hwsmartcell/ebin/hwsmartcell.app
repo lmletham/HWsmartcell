@@ -1,0 +1,10 @@
+{application,hwsmartcell,
+             [{config_mtime,1724986600},
+              {optional_applications,[]},
+              {applications,[kernel,stdlib,elixir,logger,kino,earmark,makeup,
+                             makeup_elixir]},
+              {description,"hwsmartcell"},
+              {modules,['Elixir.Hwsmartcell',
+                        'Elixir.Hwsmartcell.Application']},
+              {registered,[]},
+              {vsn,"0.1.0"}]}.
