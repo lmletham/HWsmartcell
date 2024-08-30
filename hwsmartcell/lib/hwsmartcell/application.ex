@@ -1,4 +1,4 @@
-defmodule HW_Smartcell.Application do
+defmodule Hwsmartcell.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -12,11 +12,11 @@ defmodule HW_Smartcell.Application do
       # {HiddenCell.Worker, arg}
     ]
 
-    Kino.SmartCell.register(HW_Smartcell)
+    Kino.SmartCell.register(Hwsmartcell)
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: HW_Smartcell.Supervisor]
+    opts = [strategy: :one_for_one, name: Hwsmartcell.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end

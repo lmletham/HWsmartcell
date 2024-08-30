@@ -1,4 +1,4 @@
-defmodule HW_Smartcell do
+defmodule Hwsmartcell do
   use Kino.JS
   use Kino.JS.Live
   use Kino.SmartCell, name: "HW Smartcell"
@@ -141,5 +141,3 @@ defmodule HW_Smartcell do
     File.read!("lib/main.js")
   end
 end
-
-Kino.SmartCell.register(HW_Smartcell)
