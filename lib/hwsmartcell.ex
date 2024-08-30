@@ -1,7 +1,7 @@
 defmodule Hwsmartcell do
   use Kino.JS
   use Kino.JS.Live
-  use Kino.SmartCell, name: "HW Smartcell 02"
+  use Kino.SmartCell, name: "Homework Problem - Text"
 
   @impl true
   def init(attrs, ctx) do
@@ -69,16 +69,16 @@ defmodule Hwsmartcell do
     #{attrs["problem_number"]}
 
     #Problem_Statement:
-    #{attrs["problem_statement"]}
+    #{inspect(attrs["problem_statement"], raw: true)}
 
     #Hint:
-    #{attrs["hint"]}
+    #{inspect(attrs["hint"], raw: true)}
 
     #Solution:
-    #{attrs["solution"]}
+    #{inspect(attrs["solution"], raw: true)}
 
     #Correct Answer:
-    #{attrs["correct_answer"]}
+    #{inspect(attrs["correct_answer"], raw: true)}
     """
   end
 
@@ -413,7 +413,7 @@ defmodule Hwsmartcell do
       // Initial tab display
       setActiveTab('problem_tab');
 
-      // Event listeners for tabs
+      // Event listeners for tabsa
       document.getElementById('problem_tab').addEventListener('click', () => setActiveTab('problem_tab'));
       document.getElementById('hint_tab').addEventListener('click', () => setActiveTab('hint_tab'));
       document.getElementById('solution_tab').addEventListener('click', () => setActiveTab('solution_tab'));
