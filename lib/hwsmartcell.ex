@@ -436,3 +436,5 @@ defmodule Hwsmartcell do
     """
   end
 end
+
+Kino.SmartCell.register(Hwsmartcell)
