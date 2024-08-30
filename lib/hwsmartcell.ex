@@ -141,3 +141,5 @@ defmodule Hwsmartcell do
     File.read!("lib/main.js")
   end
 end
+
+Kino.SmartCell.register(Hwsmartcell)
