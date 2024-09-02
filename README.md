@@ -9,7 +9,7 @@ Mix.install([
   {:earmark, "~> 1.4.47"},
   {:makeup, "~> 1.1"},
   {:makeup_elixir, "~> 0.7"},
-  {:hwsmartcell, github: "lmletham/HWsmartcell", override: true}
+  {:hwsmartcell, "~> 0.1.0"}
 ])
 
 #Ensure the smartcell is registered
