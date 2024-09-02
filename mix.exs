@@ -7,7 +7,10 @@ defmodule Hwsmartcell.MixProject do
       version: "0.1.0",
       elixir: "~> 1.17",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      description: "A Livebook SmartCell for homework problems.",
+      package: package(),
+      source_url: "https://github.com/lmletham/HWsmartcell"
     ]
   end
 
@@ -24,7 +27,19 @@ defmodule Hwsmartcell.MixProject do
       {:kino, "~> 0.13.2"},
       {:earmark, "~> 1.4.47"},
       {:makeup, "~> 1.1"},
-      {:makeup_elixir, "~> 0.7"}
+      {:makeup_elixir, "~> 0.7"},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end
+
+  defp package do
+    [
+      name: :hwsmartcell,
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/lmletham/HWsmartcell"},
+      maintainers: ["Lydia Letham"],
+      files: ~w(lib mix.exs README.md LICENSE)
+    ]
+  end
+
 end
