@@ -12,7 +12,7 @@ defmodule Hwsmartcell do
     ```elixir
     defmodule Test do
       def answer do
-        # Write your answer below here:
+        #Write your answer below here:
         :integer
         var = 2 + 2
         IO.puts(var)
@@ -21,12 +21,13 @@ defmodule Hwsmartcell do
     end
 
     Test.answer()
+    ```
     """
     hint = attrs["hint"] || "Try breaking the problem into smaller parts."
     solution = attrs["solution"] || "Atom"
     correct_answer = attrs["correct_answer"] || ""
 
-    # Determine whether to show the input box
+    #Determine whether to show the input box
     show_input_box = problem_type == "text"
 
     # Process the problem statement with Makeup
@@ -38,14 +39,14 @@ defmodule Hwsmartcell do
     makeup_css = makeup_stylesheet()
 
     ctx = assign(ctx,
-      problem_number: problem_number,
-      problem_type: problem_type,
-      problem_statement: rendered_problem_statement,
-      hint: rendered_hint,
-      solution: rendered_solution,
-      correct_answer: correct_answer,
-      makeup_css: makeup_css,
-      show_input_box: show_input_box
+     problem_number: problem_number,
+     problem_type: problem_type,
+     problem_statement: rendered_problem_statement,
+     hint: rendered_hint,
+     solution: rendered_solution,
+     correct_answer: correct_answer,
+     makeup_css: makeup_css,
+     show_input_box: show_input_box
     )
 
     {:ok, ctx}
@@ -118,13 +119,7 @@ defmodule Hwsmartcell do
     "solution" => solution,
     "correct_answer" => correct_answer
   }, ctx) do
-    ctx = assign(ctx,
-      problem_number: problem_number,
-      problem_statement: problem_statement,
-      hint: hint,
-      solution: solution,
-      correct_answer: correct_answer
-    )
+    ctx = assign(ctx, problem_number: problem_number, problem_statement: problem_statement, hint: hint, solution: solution, correct_answer: correct_answer)
 
     # Process the text with Makeup
     rendered_problem_statement = process_with_makeup(problem_statement)
@@ -145,11 +140,17 @@ defmodule Hwsmartcell do
   end
 
   defp process_with_makeup(text) do
+    # Split the text into sections outside and inside code blocks
     Regex.replace(~r/```elixir\n(.+?)\n```/s, text, fn _match, code ->
+      # Apply syntax highlighting to the code block
       highlighted_code = Makeup.highlight(code, lexer: Makeup.Lexers.ElixirLexer)
+
+      # Wrap the highlighted code in a pre block with padding
       "<pre style=\"margin-top: 1rem; margin-bottom: 0; padding: 1rem; background-color: #111827;\"><code class=\"highlight\">#{highlighted_code}</code></pre>"
     end)
+    # After processing code blocks, replace newlines in the remaining text with <br> tags
     |> String.replace(~r/(?!<\/?pre[^>]*>)(\n)(?!<\/?code[^>]*>)/, "<br>")
+    # Ensure any double newlines are converted into paragraph breaks for larger spacing
     |> String.replace(~r/\n\n/, "<p></p>")
   end
 
@@ -171,8 +172,10 @@ defmodule Hwsmartcell do
       user-select: none;
     }
 
+    /* Built-in pseudo elements */
     .highlight .bp { color: #e7e9db; }
 
+    /* Comments */
     .highlight .c { color: #8c92a3 !important; }
     .highlight .c * { color: #8c92a3 !important; }
     .highlight .c1 { color: #8c92a3 !important; }
@@ -188,11 +191,16 @@ defmodule Hwsmartcell do
     .highlight .cs { color: #8c92a3 !important; }
     .highlight .cs * { color: #8c92a3 !important; }
 
+    /* String Delimiters */
     .highlight .dl { color: #98c379; }
+
+    /* Errors */
     .highlight .err { color: #ef6155; }
 
+    /* Function magic */
     .highlight .fm { color: #06b6ef; }
 
+    /* Generic styles */
     .highlight .gd { color: #ef6155; }
     .highlight .ge { font-style: italic; }
     .highlight .gh { color: #e7e9db; font-weight: bold; }
@@ -201,18 +209,21 @@ defmodule Hwsmartcell do
     .highlight .gs { font-weight: bold; }
     .highlight .gu { color: #5bc4bf; font-weight: bold; }
 
+    /* Numbers */
     .highlight .il { color: #61afef; }
-    .highlight .k { color: #c678dd; }
-    .highlight .kc { color: #c678dd; }
-    .highlight .kd { color: #c678dd; }
-    .highlight .kn { color: #5bc4bf; }
-    .highlight .kp { color: #c678dd; }
-    .highlight .kr { color: #c678dd; }
-    .highlight .kt { color: #fec418; }
+    .highlight .k { color: #c678dd; } /* Keywords */
+    .highlight .kc { color: #c678dd; } /* Keyword constant */
+    .highlight .kd { color: #c678dd; } /* Keyword declaration */
+    .highlight .kn { color: #5bc4bf; } /* Keyword namespace */
+    .highlight .kp { color: #c678dd; } /* Keyword pseudo */
+    .highlight .kr { color: #c678dd; } /* Keyword reserved */
+    .highlight .kt { color: #fec418; } /* Keyword type */
 
+    /* Literals */
     .highlight .l { color: #61afef; }
     .highlight .ld { color: #61afef; }
 
+    /* Numbers */
     .highlight .m { color: #61afef; }
     .highlight .mb { color: #61afef; }
     .highlight .mf { color: #61afef; }
@@ -220,28 +231,33 @@ defmodule Hwsmartcell do
     .highlight .mi { color: #61afef; }
     .highlight .mo { color: #61afef; }
 
+    /* Names */
     .highlight .n { color: #e7e9db; }
-    .highlight .na { color: #06b6ef; }
-    .highlight .nb { color: #e7e9db; }
-    .highlight .nc { color: #56b6c2; }
-    .highlight .nd { color: #d19a66; }
-    .highlight .ne { color: #ef6155; }
-    .highlight .nf { color: #61afef; }
-    .highlight .ni { color: #e7e9db; }
-    .highlight .nl { color: #61afef; }
-    .highlight .nn { color: #56b6c2; }
-    .highlight .no { color: #61afef; }
-    .highlight .nt { color: #d19a66; }
-    .highlight .nv { color: #ef6155; }
-    .highlight .nx { color: #61afef; }
+    .highlight .na { color: #06b6ef; } /* Name attribute */
+    .highlight .nb { color: #e7e9db; } /* Name built-in */
+    .highlight .nc { color: #56b6c2; } /* Name class - Updated color */
+    .highlight .nd { color: #d19a66; } /* Name decorator */
+    .highlight .ne { color: #ef6155; } /* Name exception */
+    .highlight .nf { color: #61afef; } /* Name function */
+    .highlight .ni { color: #e7e9db; } /* Name entity */
+    .highlight .nl { color: #61afef; } /* Name label */
+    .highlight .nn { color: #56b6c2; } /* Name namespace - Updated color */
+    .highlight .no { color: #61afef; } /* Name constant */
+    .highlight .nt { color: #d19a66; } /* Name tag */
+    .highlight .nv { color: #ef6155; } /* Name variable */
+    .highlight .nx { color: #61afef; } /* Name other */
 
+    /* Operators */
     .highlight .o { color: #d19a66; }
     .highlight .ow { color: #d19a66; }
 
+    /* Punctuation */
     .highlight .p { color: #e7e9db; }
 
+    /* Properties */
     .highlight .py { color: #e7e9db; }
 
+    /* Strings */
     .highlight .s { color: #98c379; }
     .highlight .s1 { color: #98c379; }
     .highlight .s2 { color: #98c379; }
@@ -254,16 +270,17 @@ defmodule Hwsmartcell do
     .highlight .si { color: #f99b15; }
     .highlight .sr { color: #98c379; }
     .highlight .ss { color: #61afef; }
-    .highlight .sx { color: #61afef; }
+    .highlight .sx { color: #61afef; } /* String other, also used for sigils */
 
-    .highlight .vc { color: #ef6155; }
-    .highlight .vg { color: #ef6155; }
-    .highlight .vi { color: #ef6155; }
-    .highlight .vm { color: #ef6155; }
-    .highlight .vn { color: #ef6155; }
-    .highlight .vq { color: #ef6155; }
-    .highlight .vs { color: #ef6155; }
-    .highlight .w { color: #e7e9db; }
+    /* Variables */
+    .highlight .vc { color: #ef6155; } /* Variable class */
+    .highlight .vg { color: #ef6155; } /* Variable global */
+    .highlight .vi { color: #ef6155; } /* Variable instance */
+    .highlight .vm { color: #ef6155; } /* Variable magic */
+    .highlight .vn { color: #ef6155; } /* Variable namespace */
+    .highlight .vq { color: #ef6155; } /* Variable pseudo */
+    .highlight .vs { color: #ef6155; } /* Variable special */
+    .highlight .w { color: #e7e9db; } /* Whitespace */
     """
   end
 
@@ -369,14 +386,6 @@ defmodule Hwsmartcell do
             submitButton.addEventListener("click", () => {
               const inputValue = textInput.value;
               ctx.pushEvent("check_answer", { input_value: inputValue });
-            });
-
-            // Add event listener for the "Enter" key press
-            textInput.addEventListener("keydown", (event) => {
-              if (event.key === "Enter") {
-                event.preventDefault(); // Prevent form submission or other default behavior
-                submitButton.click(); // Trigger the submit button click
-              }
             });
           } else if (payload.problem_type === "elixir") {
             inputSection.innerHTML = ""; // Display nothing if problem_type is "elixir"
