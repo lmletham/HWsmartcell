@@ -377,31 +377,34 @@ defmodule Hwsmartcell do
         document.getElementById(activeTab).classList.add('text-blue-500', 'font-bold', 'border-b-2', 'border-blue-500');
         document.getElementById(activeTab).classList.remove('text-gray-500');
 
-        // Display input only on the Problem Statement tab and if problem_type is "text"
-        if (activeTab === 'problem_tab' && payload.show_input_box) {
-          document.getElementById('input_section').innerHTML = `
-            <input type="text" id="text_input" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Type your answer here...">
-            <button id="submit_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Submit</button>
-          `;
+        // Display input only on the Problem Statement tab
+        const inputSection = document.getElementById('input_section');
+        if (activeTab === 'problem_tab') {
+          if (payload.problem_type === "text") {
+            inputSection.innerHTML = `
+              <input type="text" id="text_input" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Type your answer here...">
+              <button id="submit_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Submit</button>
+            `;
 
-          const textInput = document.getElementById('text_input');
-          const submitButton = document.getElementById('submit_button');
+            const textInput = inputSection.querySelector("#text_input");
+            const submitButton = inputSection.querySelector("#submit_button");
 
-          // Add event listener for the submit button
-          submitButton.addEventListener('click', () => {
-            const inputValue = textInput.value;
-            ctx.pushEvent('check_answer', { input_value: inputValue });
-          });
+            submitButton.addEventListener("click", () => {
+              const inputValue = textInput.value;
+              ctx.pushEvent("check_answer", { input_value: inputValue });
+            });
 
-          // Add event listener for the "Enter" key press
-          textInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-              event.preventDefault(); // Prevent form submission or other default behavior
-              submitButton.click(); // Trigger the submit button click
-            }
-          });
+            textInput.addEventListener("keydown", (event) => {
+              if (event.key === "Enter") {
+                event.preventDefault(); // Prevent form submission or other default behavior
+                submitButton.click(); // Trigger the submit button click
+              }
+            });
+          } else {
+            inputSection.innerHTML = ""; // Display nothing if problem_type is "elixir"
+          }
         } else {
-          document.getElementById('input_section').innerHTML = ''; // Clear the input section on other tabs or when input should not be displayed
+          inputSection.innerHTML = ""; // Clear the input section on other tabs
         }
       }
 
@@ -460,6 +463,7 @@ defmodule Hwsmartcell do
         tabs.problem_tab = payload.problem_statement;
         tabs.hint_tab = payload.hint;
         tabs.solution_tab = payload.solution;
+        payload.problem_type = payload.problem_type; // Make sure problem_type is updated
         setActiveTab('problem_tab');
       });
     }
