@@ -6,6 +6,7 @@ defmodule Hwsmartcell do
   @impl true
   def init(attrs, ctx) do
     problem_number = attrs["problem_number"] || "1"
+    problem_type = attrs["problem_type"] || "text"
     problem_statement = attrs["problem_statement"] || """
     What is this data type?
     ```elixir
@@ -34,7 +35,15 @@ defmodule Hwsmartcell do
     # Generate the Makeup CSS
     makeup_css = makeup_stylesheet()
 
-    ctx = assign(ctx, problem_number: problem_number, problem_statement: rendered_problem_statement, hint: rendered_hint, solution: rendered_solution, correct_answer: correct_answer, makeup_css: makeup_css)
+    ctx = assign(ctx,
+     problem_number: problem_number,
+     problem_type: problem_type,
+     problem_statement: rendered_problem_statement,
+     hint: rendered_hint,
+     solution: rendered_solution,
+     correct_answer: correct_answer,
+     makeup_css: makeup_css
+    )
 
     {:ok, ctx}
   end
@@ -43,6 +52,7 @@ defmodule Hwsmartcell do
   def handle_connect(ctx) do
     {:ok, %{
       problem_number: ctx.assigns.problem_number,
+      problem_type: ctx.assigns.problem_type,
       problem_statement: ctx.assigns.problem_statement,
       hint: ctx.assigns.hint,
       solution: ctx.assigns.solution,
@@ -55,6 +65,7 @@ defmodule Hwsmartcell do
   def to_attrs(ctx) do
     %{
       "problem_number" => ctx.assigns.problem_number,
+      "problem_type" => ctx.assigns.problem_type,
       "problem_statement" => ctx.assigns.problem_statement,
       "hint" => ctx.assigns.hint,
       "solution" => ctx.assigns.solution,
@@ -316,6 +327,13 @@ defmodule Hwsmartcell do
             <input type="text" id="problem_number" class="w-full p-2 border border-gray-300 rounded-md" value="${payload.problem_number}">
           </div>
           <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="problem_type">Problem Type</label>
+            <select id="problem_type" class="w-full p-2 border border-gray-300 rounded-md">
+              <option value="text" ${payload.problem_type === 'text' ? 'selected' : ''}>Text</option>
+              <option value="elixir" ${payload.problem_type === 'elixir' ? 'selected' : ''}>Elixir</option>
+            </select>
+          </div>
+          <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="problem_statement">Problem Statement</label>
             <textarea id="problem_statement" rows="6" class="w-full p-2 border border-gray-300 rounded-md">${payload.problem_statement}</textarea>
           </div>
@@ -391,6 +409,7 @@ defmodule Hwsmartcell do
       // Save button logic
       document.getElementById('save_button').addEventListener('click', () => {
         const problemNumber = document.getElementById('problem_number').value;
+        const problemType = document.getElementById('problem_type').value;
         const problemStatement = document.getElementById('problem_statement').value;
         const hint = document.getElementById('hint').value;
         const solution = document.getElementById('solution').value;
@@ -398,6 +417,7 @@ defmodule Hwsmartcell do
 
         ctx.pushEvent('save_edits', {
           problem_number: problemNumber,
+          problem_type: problemType,
           problem_statement: problemStatement,
           hint: hint,
           solution: solution,
