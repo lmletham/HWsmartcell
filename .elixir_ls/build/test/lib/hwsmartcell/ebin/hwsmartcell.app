@@ -1,5 +1,5 @@
 {application,hwsmartcell,
-             [{config_mtime,1725389276},
+             [{config_mtime,1725397395},
               {optional_applications,[]},
               {applications,[kernel,stdlib,elixir,logger,kino,earmark,makeup,
                              makeup_elixir]},

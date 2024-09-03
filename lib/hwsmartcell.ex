@@ -27,6 +27,9 @@ defmodule Hwsmartcell do
     solution = attrs["solution"] || "Atom"
     correct_answer = attrs["correct_answer"] || ""
 
+    #Determine whether to show the input box
+    show_input_box = problem_type == "text"
+
     # Process the problem statement with Makeup
     rendered_problem_statement = process_with_makeup(problem_statement)
     rendered_hint = process_with_makeup(hint)
@@ -42,7 +45,8 @@ defmodule Hwsmartcell do
      hint: rendered_hint,
      solution: rendered_solution,
      correct_answer: correct_answer,
-     makeup_css: makeup_css
+     makeup_css: makeup_css,
+     show_input_box: show_input_box
     )
 
     {:ok, ctx}
@@ -57,7 +61,8 @@ defmodule Hwsmartcell do
       hint: ctx.assigns.hint,
       solution: ctx.assigns.solution,
       correct_answer: ctx.assigns.correct_answer,
-      makeup_css: ctx.assigns.makeup_css
+      makeup_css: ctx.assigns.makeup_css,
+      show_input_box: ctx.assigns.show_input_box
     }, ctx}
   end
 
@@ -373,7 +378,7 @@ defmodule Hwsmartcell do
         document.getElementById(activeTab).classList.remove('text-gray-500');
 
         // Display input only on the Problem Statement tab
-        if (activeTab === 'problem_tab') {
+        if (activeTab === 'problem_tab' && payload.show_input_box) {
           document.getElementById('input_section').innerHTML = `
             <input type="text" id="text_input" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Type your answer here...">
             <button id="submit_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Submit</button>
