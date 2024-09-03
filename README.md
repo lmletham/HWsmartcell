@@ -16,4 +16,4 @@ I only need to have the above in the startup cell because all my dependencies ar
 
 
 # Code Notes
-Alright! This version has working "elixir hide" function and submit button.
+This version has a basic working version of the "Test Code" field.
