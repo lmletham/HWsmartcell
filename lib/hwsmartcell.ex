@@ -133,7 +133,7 @@ defmodule Hwsmartcell do
       highlighted_code
       |> String.replace(~r/(?<=[^a-zA-Z0-9_])puts(?=[^a-zA-Z0-9_])/, ~s(<span class="nf">puts</span>))
       |> String.replace(~r/(?<=[^a-zA-Z0-9_])answer(?=[^a-zA-Z0-9_])/, ~s(<span class="nf">answer</span>))
-      |> (fn hc -> "<pre style=\"margin-top: 1rem; margin: 0; padding: 1rem; background-color: #111827;\"><code class=\"highlight\">#{hc}</code></pre>" end).()
+      |> (fn hc -> "<pre style=\"margin-top: 1rem !important; margin: 0; padding: 1rem; background-color: #111827;\"><code class=\"highlight\">#{hc}</code></pre>" end).()
     end)
   end
 
@@ -288,6 +288,11 @@ defmodule Hwsmartcell do
             font-size: 1rem;
             line-height: 1.25rem;
             font-family: JetBrains Mono, monospace;
+          }
+          pre {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #111827;
           }
         </style>
 
