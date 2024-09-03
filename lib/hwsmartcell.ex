@@ -1,7 +1,7 @@
 defmodule Hwsmartcell do
   use Kino.JS
   use Kino.JS.Live
-  use Kino.SmartCell, name: "HW Smartcell 03"
+  use Kino.SmartCell, name: "Homework Smartcell"
 
   @impl true
   def init(attrs, ctx) do
