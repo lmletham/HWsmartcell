@@ -27,7 +27,7 @@ defmodule Hwsmartcell do
     solution = attrs["solution"] || "Atom"
     correct_answer = attrs["correct_answer"] || ""
 
-    # Determine whether to show the input box
+    #Determine whether to show the input box
     show_input_box = problem_type == "text"
 
     # Process the problem statement with Makeup
@@ -39,14 +39,14 @@ defmodule Hwsmartcell do
     makeup_css = makeup_stylesheet()
 
     ctx = assign(ctx,
-      problem_number: problem_number,
-      problem_type: problem_type,
-      problem_statement: rendered_problem_statement,
-      hint: rendered_hint,
-      solution: rendered_solution,
-      correct_answer: correct_answer,
-      makeup_css: makeup_css,
-      show_input_box: show_input_box
+     problem_number: problem_number,
+     problem_type: problem_type,
+     problem_statement: rendered_problem_statement,
+     hint: rendered_hint,
+     solution: rendered_solution,
+     correct_answer: correct_answer,
+     makeup_css: makeup_css,
+     show_input_box: show_input_box
     )
 
     {:ok, ctx}
@@ -114,21 +114,12 @@ defmodule Hwsmartcell do
   @impl true
   def handle_event("save_edits", %{
     "problem_number" => problem_number,
-    "problem_type" => problem_type,
     "problem_statement" => problem_statement,
     "hint" => hint,
     "solution" => solution,
     "correct_answer" => correct_answer
   }, ctx) do
-    ctx = assign(ctx,
-      problem_number: problem_number,
-      problem_type: problem_type,
-      problem_statement: problem_statement,
-      hint: hint,
-      solution: solution,
-      correct_answer: correct_answer,
-      show_input_box: problem_type == "text"
-    )
+    ctx = assign(ctx, problem_number: problem_number, problem_statement: problem_statement, hint: hint, solution: solution, correct_answer: correct_answer)
 
     # Process the text with Makeup
     rendered_problem_statement = process_with_makeup(problem_statement)
@@ -142,8 +133,7 @@ defmodule Hwsmartcell do
       hint: rendered_hint,
       solution: rendered_solution,
       correct_answer: correct_answer,
-      makeup_css: ctx.assigns.makeup_css,
-      show_input_box: ctx.assigns.show_input_box
+      makeup_css: ctx.assigns.makeup_css
     })
 
     {:noreply, ctx}
@@ -383,30 +373,33 @@ defmodule Hwsmartcell do
         activeTab.classList.remove("text-gray-500");
 
         // Display input only on the Problem Statement tab
-        if (tab === "problem_statement" && payload.show_input_box) {
-          inputSection.innerHTML = `
-            <input type="text" id="text_input" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Type your answer here...">
-            <button id="submit_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Submit</button>
-          `;
+        if (tab === "problem_statement") {
+          if (payload.problem_type === "text") {
+            inputSection.innerHTML = `
+              <input type="text" id="text_input" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Type your answer here...">
+              <button id="submit_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Submit</button>
+            `;
 
-          const textInput = document.getElementById('text_input');
-          const submitButton = document.getElementById('submit_button');
+            const textInput = inputSection.querySelector("#text_input");
+            const submitButton = inputSection.querySelector("#submit_button");
 
-          // Add event listener for the submit button
-          submitButton.addEventListener('click', () => {
-            const inputValue = textInput.value;
-            ctx.pushEvent('check_answer', { input_value: inputValue });
-          });
+            submitButton.addEventListener("click", () => {
+              const inputValue = textInput.value;
+              ctx.pushEvent("check_answer", { input_value: inputValue });
+            });
 
-          // Add event listener for the "Enter" key press
-          textInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-              event.preventDefault(); // Prevent form submission or other default behavior
-              submitButton.click(); // Trigger the submit button click
-            }
-          });
+            // Allow submission with the "Enter" key
+            textInput.addEventListener("keydown", (event) => {
+              if (event.key === "Enter") {
+                event.preventDefault(); // Prevent form submission or other default behavior
+                submitButton.click(); // Trigger the submit button click
+              }
+            });
+          } else if (payload.problem_type === "elixir") {
+            inputSection.innerHTML = ""; // Display nothing if problem_type is "elixir"
+          }
         } else {
-          document.getElementById('input_section').innerHTML = ''; // Clear the input section on other tabs or when input should not be displayed
+          inputSection.innerHTML = ""; // Clear the input section on other tabs
         }
       }
 
@@ -451,9 +444,9 @@ defmodule Hwsmartcell do
 
         // Update header and content
         document.getElementById('header').textContent = `Problem ${problemNumber}`;
-        tabs.problem_tab = problemStatement;
-        tabs.hint_tab = hint;
-        tabs.solution_tab = solution;
+        tabs.problem_statement = problemStatement;
+        tabs.hint = hint;
+        tabs.solution = solution;
 
         // Switch back to view mode
         mainSection.classList.toggle("hidden");
@@ -466,13 +459,6 @@ defmodule Hwsmartcell do
       ctx.handleEvent("feedback", ({ message, color }) => {
         feedbackSection.textContent = message;
         feedbackSection.className = `mt-4 font-bold ${color}`;
-      });
-
-      ctx.handleEvent("refresh", (payload) => {
-        tabs.problem_tab = payload.problem_statement;
-        tabs.hint_tab = payload.hint;
-        tabs.solution_tab = payload.solution;
-        displayContent("problem_statement", problemTab);
       });
     }
     """
