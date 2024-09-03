@@ -366,6 +366,8 @@ defmodule Hwsmartcell do
       };
 
       function setActiveTab(activeTab) {
+        const inputSection = document.getElementById('input_section');
+
         // Set active content
         document.getElementById('content').innerHTML = tabs[activeTab];
 
@@ -377,8 +379,7 @@ defmodule Hwsmartcell do
         document.getElementById(activeTab).classList.add('text-blue-500', 'font-bold', 'border-b-2', 'border-blue-500');
         document.getElementById(activeTab).classList.remove('text-gray-500');
 
-        // Display input only on the Problem Statement tab
-        const inputSection = document.getElementById('input_section');
+        // Display input only on the Problem Statement tab and if problem_type is "text"
         if (activeTab === 'problem_tab') {
           if (payload.problem_type === "text") {
             inputSection.innerHTML = `
@@ -386,22 +387,24 @@ defmodule Hwsmartcell do
               <button id="submit_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Submit</button>
             `;
 
-            const textInput = inputSection.querySelector("#text_input");
-            const submitButton = inputSection.querySelector("#submit_button");
+            const textInput = document.getElementById('text_input');
+            const submitButton = document.getElementById('submit_button');
 
-            submitButton.addEventListener("click", () => {
+            // Add event listener for the submit button
+            submitButton.addEventListener('click', () => {
               const inputValue = textInput.value;
-              ctx.pushEvent("check_answer", { input_value: inputValue });
+              ctx.pushEvent('check_answer', { input_value: inputValue });
             });
 
-            textInput.addEventListener("keydown", (event) => {
-              if (event.key === "Enter") {
+            // Add event listener for the "Enter" key press
+            textInput.addEventListener('keydown', (event) => {
+              if (event.key === 'Enter') {
                 event.preventDefault(); // Prevent form submission or other default behavior
                 submitButton.click(); // Trigger the submit button click
               }
             });
           } else {
-            inputSection.innerHTML = ""; // Display nothing if problem_type is "elixir"
+            inputSection.innerHTML = ""; // Clear the input section if problem_type is "elixir"
           }
         } else {
           inputSection.innerHTML = ""; // Clear the input section on other tabs
@@ -441,6 +444,9 @@ defmodule Hwsmartcell do
         // Switch back to view mode
         document.querySelector('section').classList.toggle('hidden');
         document.getElementById('edit_section').classList.toggle('hidden');
+
+        // Refresh the active tab
+        setActiveTab('problem_tab');
       });
 
       // Initial tab display
