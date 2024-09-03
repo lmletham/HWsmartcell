@@ -98,6 +98,9 @@ defmodule Hwsmartcell do
 
     #Correct Answer:
     #{inspect(attrs["correct_answer"], raw: true)}
+
+    #Test Code:
+    #{attrs["test_code"]}
     """
   end
 
@@ -492,5 +495,3 @@ defmodule Hwsmartcell do
     """
   end
 end
-
-Kino.SmartCell.register(Hwsmartcell)
