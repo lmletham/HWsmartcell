@@ -1,5 +1,5 @@
 {application,hwsmartcell,
-             [{config_mtime,1725302680},
+             [{config_mtime,1725389276},
               {optional_applications,[]},
               {applications,[kernel,stdlib,elixir,logger,kino,earmark,makeup,
                              makeup_elixir]},
@@ -7,4 +7,4 @@
               {modules,['Elixir.Hwsmartcell',
                         'Elixir.Hwsmartcell.Application']},
               {registered,[]},
-              {vsn,"0.1.0"}]}.
+              {vsn,"0.1.1"}]}.
