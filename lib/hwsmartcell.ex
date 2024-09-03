@@ -368,6 +368,10 @@ defmodule Hwsmartcell do
       function setActiveTab(activeTab) {
         const inputSection = document.getElementById('input_section');
 
+        // Debug: Log the active tab and problem_type
+        console.log("Active Tab:", activeTab);
+        console.log("Problem Type:", payload.problem_type);
+
         // Set active content
         document.getElementById('content').innerHTML = tabs[activeTab];
 
@@ -390,13 +394,11 @@ defmodule Hwsmartcell do
             const textInput = document.getElementById('text_input');
             const submitButton = document.getElementById('submit_button');
 
-            // Add event listener for the submit button
             submitButton.addEventListener('click', () => {
               const inputValue = textInput.value;
               ctx.pushEvent('check_answer', { input_value: inputValue });
             });
 
-            // Add event listener for the "Enter" key press
             textInput.addEventListener('keydown', (event) => {
               if (event.key === 'Enter') {
                 event.preventDefault(); // Prevent form submission or other default behavior
@@ -404,9 +406,11 @@ defmodule Hwsmartcell do
               }
             });
           } else {
+            console.log("Clearing input section, problem_type is not 'text'");
             inputSection.innerHTML = ""; // Clear the input section if problem_type is "elixir"
           }
         } else {
+          console.log("Clearing input section, active tab is not 'problem_tab'");
           inputSection.innerHTML = ""; // Clear the input section on other tabs
         }
       }
