@@ -26,6 +26,7 @@ defmodule Hwsmartcell do
     hint = attrs["hint"] || "Try breaking the problem into smaller parts."
     solution = attrs["solution"] || "Atom"
     correct_answer = attrs["correct_answer"] || ""
+    test_code = attrs["test_code"] || ""
 
     #Determine whether to show the input box
     show_input_box = problem_type == "text"
@@ -45,6 +46,7 @@ defmodule Hwsmartcell do
      hint: rendered_hint,
      solution: rendered_solution,
      correct_answer: correct_answer,
+     test_code: test_code,
      makeup_css: makeup_css,
      show_input_box: show_input_box
     )
@@ -74,7 +76,8 @@ defmodule Hwsmartcell do
       "problem_statement" => ctx.assigns.problem_statement,
       "hint" => ctx.assigns.hint,
       "solution" => ctx.assigns.solution,
-      "correct_answer" => ctx.assigns.correct_answer
+      "correct_answer" => ctx.assigns.correct_answer,
+      "test_code" => ctx.assigns.test_code
     }
   end
 
@@ -117,9 +120,17 @@ defmodule Hwsmartcell do
     "problem_statement" => problem_statement,
     "hint" => hint,
     "solution" => solution,
-    "correct_answer" => correct_answer
+    "correct_answer" => correct_answer,
+    "test_code" => test_code
   }, ctx) do
-    ctx = assign(ctx, problem_number: problem_number, problem_statement: problem_statement, hint: hint, solution: solution, correct_answer: correct_answer)
+    ctx = assign(ctx,
+    problem_number: problem_number,
+    problem_statement: problem_statement,
+    hint: hint,
+    solution: solution,
+    correct_answer: correct_answer,
+    test_code: test_code
+  )
 
     # Process the text with Makeup
     rendered_problem_statement = process_with_makeup(problem_statement)
@@ -341,6 +352,10 @@ defmodule Hwsmartcell do
             <label class="block text-gray-700 text-sm font-bold mb-2" for="correct_answer">Correct Answer</label>
             <input type="text" id="correct_answer" class="w-full p-2 border border-gray-300 rounded-md" value="${payload.correct_answer}">
           </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="test_code">Test Code</label>
+            <textarea id="test_code" rows="6" class="w-full p-2 border border-gray-300 rounded-md">${payload.test_code || ''}</textarea>
+          </div>
           <button id="save_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Save</button>
         </section>
       `;
@@ -466,6 +481,7 @@ defmodule Hwsmartcell do
         tabs.problem_tab = payload.problem_statement;
         tabs.hint_tab = payload.hint;
         tabs.solution_tab = payload.solution;
+        document.getElementById("test_code").value = payload.test_code;
         displayContent("problem_statement", problemTab);
       });
     }
