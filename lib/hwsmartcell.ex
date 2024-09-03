@@ -377,7 +377,7 @@ defmodule Hwsmartcell do
         document.getElementById(activeTab).classList.add('text-blue-500', 'font-bold', 'border-b-2', 'border-blue-500');
         document.getElementById(activeTab).classList.remove('text-gray-500');
 
-        // Display input only on the Problem Statement tab
+        // Display input only on the Problem Statement tab and if problem_type is "text"
         if (activeTab === 'problem_tab' && payload.show_input_box) {
           document.getElementById('input_section').innerHTML = `
             <input type="text" id="text_input" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Type your answer here...">
@@ -401,7 +401,7 @@ defmodule Hwsmartcell do
             }
           });
         } else {
-          document.getElementById('input_section').innerHTML = ''; // Clear the input section on other tabs
+          document.getElementById('input_section').innerHTML = ''; // Clear the input section on other tabs or when input should not be displayed
         }
       }
 
@@ -443,7 +443,7 @@ defmodule Hwsmartcell do
       // Initial tab display
       setActiveTab('problem_tab');
 
-      // Event listeners for tabsa
+      // Event listeners for tabs
       document.getElementById('problem_tab').addEventListener('click', () => setActiveTab('problem_tab'));
       document.getElementById('hint_tab').addEventListener('click', () => setActiveTab('hint_tab'));
       document.getElementById('solution_tab').addEventListener('click', () => setActiveTab('solution_tab'));
