@@ -143,6 +143,10 @@ defmodule Hwsmartcell do
     .highlight .hll { background-color: #111827; }
     .highlight { color: #e7e9db; background-color: #111827; }
 
+    pre {
+      border-radius: 0.5rem;
+    }
+
     .highlight .unselectable {
       -webkit-touch-callout: none;
       -webkit-user-select: none;
