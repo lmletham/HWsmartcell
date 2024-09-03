@@ -144,6 +144,7 @@ defmodule Hwsmartcell do
       hint: rendered_hint,
       solution: rendered_solution,
       correct_answer: correct_answer,
+      test_code: test_code,
       makeup_css: ctx.assigns.makeup_css
     })
 
@@ -440,6 +441,7 @@ defmodule Hwsmartcell do
         const hint = document.getElementById('hint').value;
         const solution = document.getElementById('solution').value;
         const correctAnswer = document.getElementById('correct_answer').value;
+        const testCode = document.getElementById('test_code').value;
 
         ctx.pushEvent('save_edits', {
           problem_number: problemNumber,
@@ -447,7 +449,8 @@ defmodule Hwsmartcell do
           problem_statement: problemStatement,
           hint: hint,
           solution: solution,
-          correct_answer: correctAnswer
+          correct_answer: correctAnswer,
+          test_code: testCode
         });
 
         // Update the payload and tabs
@@ -457,6 +460,7 @@ defmodule Hwsmartcell do
         payload.hint = hint;
         payload.solution = solution;
         payload.correct_answer = correctAnswer;
+        payload.test_code = testCode;
 
         // Update header and content
         document.getElementById('header').textContent = `Problem ${problemNumber}`;
