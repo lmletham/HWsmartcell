@@ -380,8 +380,8 @@ defmodule Hwsmartcell do
               <button id="submit_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Submit</button>
             `;
 
-            const textInput = inputSection.querySelector("#text_input");
-            const submitButton = inputSection.querySelector("#submit_button");
+            const textInput = document.getElementById('text_input');
+            const submitButton = document.getElementById('submit_button');
 
             // Event listener for the submit button
             submitButton.addEventListener("click", () => {
@@ -460,6 +460,13 @@ defmodule Hwsmartcell do
       ctx.handleEvent("feedback", ({ message, color }) => {
         feedbackSection.textContent = message;
         feedbackSection.className = `mt-4 font-bold ${color}`;
+      });
+
+      ctx.handleEvent("refresh", (payload) => {
+        tabs.problem_tab = payload.problem_statement;
+        tabs.hint_tab = payload.hint;
+        tabs.solution_tab = payload.solution;
+        displayContent("problem_statement", problemTab);
       });
     }
     """
