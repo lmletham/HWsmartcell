@@ -13,3 +13,5 @@ Kino.SmartCell.register(Hwsmartcell)
 ```
 
 I only need to have the above in the startup cell because all my dependencies are called in mix.exs already.
+
+OK, this is the version that has a working "elixir" hide function. Submit button is broken though.
