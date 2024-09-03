@@ -293,6 +293,11 @@ defmodule Hwsmartcell do
       tailwindLink.href = "https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css";
       document.head.appendChild(tailwindLink);
 
+      // Include Makeup CSS from the payload
+      const makeupStyle = document.createElement("style");
+      makeupStyle.textContent = payload.makeup_css;
+      document.head.appendChild(makeupStyle);
+
       ctx.root.innerHTML = `
         <section class="bg-gray-100 p-4 rounded-md relative">
           <button id="edit_button" class="absolute top-2 right-2 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">Edit</button>
