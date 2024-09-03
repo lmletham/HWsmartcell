@@ -5,7 +5,7 @@ Livebook smartcell for homework problems
 # Code for the Startup Cell
 ```elixir
 Mix.install([
-  {:hwsmartcell, "~> 0.1.0"}
+  {:hwsmartcell, ">= 0.1.0"}
 ])
 
 #Ensure the smartcell is registered
