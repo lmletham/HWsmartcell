@@ -293,25 +293,7 @@ defmodule Hwsmartcell do
       tailwindLink.href = "https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css";
       document.head.appendChild(tailwindLink);
 
-      // Include Makeup CSS
-      const makeupStyle = document.createElement("style");
-      makeupStyle.textContent = payload.makeup_css || '';
-      document.head.appendChild(makeupStyle);
-
       ctx.root.innerHTML = `
-        <style>
-          pill {
-            display: inline-block;
-            padding: 0.1rem 0.5rem;
-            border-radius: 0.5rem;
-            background-color: #e2e8f0;
-            color: #000000;
-            font-size: 1rem;
-            line-height: 1.25rem;
-            font-family: JetBrains Mono, monospace;
-          }
-        </style>
-
         <section class="bg-gray-100 p-4 rounded-md relative">
           <button id="edit_button" class="absolute top-2 right-2 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">Edit</button>
           <h2 id="header" class="text-2xl font-bold mb-4">Problem ${payload.problem_number}</h2>
@@ -358,71 +340,71 @@ defmodule Hwsmartcell do
         </section>
       `;
 
-      // Tab switching logic
+      const problemTab = ctx.root.querySelector("#problem_tab");
+      const hintTab = ctx.root.querySelector("#hint_tab");
+      const solutionTab = ctx.root.querySelector("#solution_tab");
+      const content = ctx.root.querySelector("#content");
+      const inputSection = ctx.root.querySelector("#input_section");
+      const feedbackSection = ctx.root.querySelector("#feedback");
+      const editButton = ctx.root.querySelector("#edit_button");
+      const editSection = ctx.root.querySelector("#edit_section");
+      const mainSection = ctx.root.querySelector("section");
+
       const tabs = {
-        problem_tab: payload.problem_statement,
-        hint_tab: payload.hint,
-        solution_tab: payload.solution
+        "problem_statement": payload.problem_statement,
+        "hint": payload.hint,
+        "solution": payload.solution
       };
 
-      function setActiveTab(activeTab) {
-        const inputSection = document.getElementById('input_section');
+      function displayContent(tab, activeTab) {
+        content.innerHTML = tabs[tab];
 
-        // Debug: Log the active tab and problem_type
-        console.log("Active Tab:", activeTab);
-        console.log("Problem Type:", payload.problem_type);
-
-        // Set active content
-        document.getElementById('content').innerHTML = tabs[activeTab];
-
-        // Update tab styles
-        document.querySelectorAll('.tab_button').forEach(button => {
-          button.classList.remove('text-blue-500', 'font-bold', 'border-b-2', 'border-blue-500');
-          button.classList.add('text-gray-500');
+        // Update active class
+        document.querySelectorAll(".tab_button").forEach(btn => {
+          btn.classList.remove("text-blue-500", "font-bold", "border-b-2", "border-blue-500");
+          btn.classList.add("text-gray-500");
         });
-        document.getElementById(activeTab).classList.add('text-blue-500', 'font-bold', 'border-b-2', 'border-blue-500');
-        document.getElementById(activeTab).classList.remove('text-gray-500');
+        activeTab.classList.add("text-blue-500", "font-bold", "border-b-2", "border-blue-500");
+        activeTab.classList.remove("text-gray-500");
 
-        // Display input only on the Problem Statement tab and if problem_type is "text"
-        if (activeTab === 'problem_tab') {
+        // Display input only on the Problem Statement tab
+        if (tab === "problem_statement") {
           if (payload.problem_type === "text") {
             inputSection.innerHTML = `
               <input type="text" id="text_input" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Type your answer here...">
               <button id="submit_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Submit</button>
             `;
 
-            const textInput = document.getElementById('text_input');
-            const submitButton = document.getElementById('submit_button');
+            const textInput = inputSection.querySelector("#text_input");
+            const submitButton = inputSection.querySelector("#submit_button");
 
-            submitButton.addEventListener('click', () => {
+            submitButton.addEventListener("click", () => {
               const inputValue = textInput.value;
-              ctx.pushEvent('check_answer', { input_value: inputValue });
+              ctx.pushEvent("check_answer", { input_value: inputValue });
             });
-
-            textInput.addEventListener('keydown', (event) => {
-              if (event.key === 'Enter') {
-                event.preventDefault(); // Prevent form submission or other default behavior
-                submitButton.click(); // Trigger the submit button click
-              }
-            });
-          } else {
-            console.log("Clearing input section, problem_type is not 'text'");
-            inputSection.innerHTML = ""; // Clear the input section if problem_type is "elixir"
+          } else if (payload.problem_type === "elixir") {
+            inputSection.innerHTML = ""; // Display nothing if problem_type is "elixir"
           }
         } else {
-          console.log("Clearing input section, active tab is not 'problem_tab'");
           inputSection.innerHTML = ""; // Clear the input section on other tabs
         }
       }
 
+      problemTab.addEventListener("click", () => displayContent("problem_statement", problemTab));
+      hintTab.addEventListener("click", () => displayContent("hint", hintTab));
+      solutionTab.addEventListener("click", () => displayContent("solution", solutionTab));
+
+      displayContent("problem_statement", problemTab); // Show the problem statement by default
+
       // Edit button logic
-      document.getElementById('edit_button').addEventListener('click', () => {
-        document.querySelector('section').classList.toggle('hidden');
-        document.getElementById('edit_section').classList.toggle('hidden');
+      editButton.addEventListener("click", () => {
+        mainSection.classList.toggle("hidden");
+        editSection.classList.toggle("hidden");
       });
 
       // Save button logic
-      document.getElementById('save_button').addEventListener('click', () => {
+      const saveButton = ctx.root.querySelector("#save_button");
+      saveButton.addEventListener("click", () => {
         const problemNumber = document.getElementById('problem_number').value;
         const problemType = document.getElementById('problem_type').value;
         const problemStatement = document.getElementById('problem_statement').value;
@@ -439,42 +421,31 @@ defmodule Hwsmartcell do
           correct_answer: correctAnswer
         });
 
+        // Update the payload and tabs
+        payload.problem_number = problemNumber;
+        payload.problem_type = problemType;
+        payload.problem_statement = problemStatement;
+        payload.hint = hint;
+        payload.solution = solution;
+        payload.correct_answer = correctAnswer;
+
         // Update header and content
         document.getElementById('header').textContent = `Problem ${problemNumber}`;
-        tabs.problem_tab = problemStatement;
-        tabs.hint_tab = hint;
-        tabs.solution_tab = solution;
+        tabs.problem_statement = problemStatement;
+        tabs.hint = hint;
+        tabs.solution = solution;
 
         // Switch back to view mode
-        document.querySelector('section').classList.toggle('hidden');
-        document.getElementById('edit_section').classList.toggle('hidden');
+        mainSection.classList.toggle("hidden");
+        editSection.classList.toggle("hidden");
 
         // Refresh the active tab
-        setActiveTab('problem_tab');
+        displayContent('problem_statement', problemTab);
       });
 
-      // Initial tab display
-      setActiveTab('problem_tab');
-
-      // Event listeners for tabs
-      document.getElementById('problem_tab').addEventListener('click', () => setActiveTab('problem_tab'));
-      document.getElementById('hint_tab').addEventListener('click', () => setActiveTab('hint_tab'));
-      document.getElementById('solution_tab').addEventListener('click', () => setActiveTab('solution_tab'));
-
-      // Handle feedback events
-      ctx.handleEvent('feedback', ({ message, color }) => {
-        const feedbackSection = document.getElementById('feedback');
+      ctx.handleEvent("feedback", ({ message, color }) => {
         feedbackSection.textContent = message;
         feedbackSection.className = `mt-4 font-bold ${color}`;
-      });
-
-      // Handle refresh events
-      ctx.handleEvent('refresh', (payload) => {
-        tabs.problem_tab = payload.problem_statement;
-        tabs.hint_tab = payload.hint;
-        tabs.solution_tab = payload.solution;
-        payload.problem_type = payload.problem_type; // Make sure problem_type is updated
-        setActiveTab('problem_tab');
       });
     }
     """
