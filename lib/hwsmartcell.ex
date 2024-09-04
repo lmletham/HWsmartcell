@@ -124,24 +124,27 @@ defmodule Hwsmartcell do
     "problem_statement" => problem_statement,
     "hint" => hint,
     "solution" => solution,
-    "correct_answer" => correct_answer,
-    "test_code" => test_code
-  }, ctx) do
-    ctx = assign(ctx,
-    problem_number: problem_number,
-    problem_statement: problem_statement,
-    hint: hint,
-    solution: solution,
-    correct_answer: correct_answer,
-    test_code: test_code
-  )
+    "correct_answer" => correct_answer
+  } = event_data, ctx) do
+    # If test_code is missing, set it to an empty string
+    test_code = Map.get(event_data, "test_code", "")
 
-    # Process the text with Makeup
+    # Update context with the new values
+    ctx = assign(ctx,
+      problem_number: problem_number,
+      problem_statement: problem_statement,
+      hint: hint,
+      solution: solution,
+      correct_answer: correct_answer,
+      test_code: test_code
+    )
+
+    # Process the text with Makeup for syntax highlighting
     rendered_problem_statement = process_with_makeup(problem_statement)
     rendered_hint = process_with_makeup(hint)
     rendered_solution = process_with_makeup(solution)
 
-    # Send the rendered HTML and CSS to the client-side for display
+    # Broadcast the updated data to the client for rendering
     broadcast_event(ctx, "refresh", %{
       problem_number: problem_number,
       problem_statement: rendered_problem_statement,
@@ -154,6 +157,7 @@ defmodule Hwsmartcell do
 
     {:noreply, ctx}
   end
+
 
   defp process_with_makeup(text) do
     # Split the text into sections outside and inside code blocks
