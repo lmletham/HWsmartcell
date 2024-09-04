@@ -85,24 +85,25 @@ defmodule Hwsmartcell do
   def to_source(attrs) do
     """
     #Problem_Number:
-    """ <> attrs["problem_number"] <> """
+    _ = "#{attrs["problem_number"]}"
 
     #Problem_Statement:
-    """ <> attrs["problem_statement"] <> """
+    _ = "#{inspect(attrs["problem_statement"], raw: true)}"
 
     #Hint:
-    """ <> attrs["hint"] <> """
+    _ = "#{inspect(attrs["hint"], raw: true)}"
 
     #Solution:
-    """ <> attrs["solution"] <> """
+    _ = "#{inspect(attrs["solution"], raw: true)}"
 
     #Correct Answer:
-    """ <> attrs["correct_answer"] <> """
+    _ = "#{inspect(attrs["correct_answer"], raw: true)}"
 
     #Test Code:
-    """ <> attrs["test_code"] <> """
+    #{attrs["test_code"]}
     """
   end
+
 
   @impl true
   def handle_event("check_answer", %{"input_value" => input_value}, ctx) do
