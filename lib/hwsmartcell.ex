@@ -88,16 +88,16 @@ defmodule Hwsmartcell do
     _ = "#{attrs["problem_number"]}"
 
     #Problem_Statement:
-    _ = "#{inspect(attrs["problem_statement"], raw: true)}"
+    _ = ~S#{inspect(attrs["problem_statement"], raw: true)}
 
     #Hint:
-    _ = "#{inspect(attrs["hint"], raw: true)}"
+    _ = ~S#{inspect(attrs["hint"], raw: true)}
 
     #Solution:
-    _ = "#{inspect(attrs["solution"], raw: true)}"
+    _ = ~S#{inspect(attrs["solution"], raw: true)}
 
     #Correct Answer:
-    _ = "#{inspect(attrs["correct_answer"], raw: true)}"
+    _ = ~S#{inspect(attrs["correct_answer"], raw: true)}
 
     #Test Code:
     #{attrs["test_code"]}
