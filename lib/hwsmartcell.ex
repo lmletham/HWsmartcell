@@ -100,7 +100,7 @@ defmodule Hwsmartcell do
     _ = ~s#{inspect(attrs["correct_answer"], raw: true)}
 
     #Test Code:
-    _ = ~s#{attrs["test_code"]}
+    _ = #{attrs["test_code"]}
     """
   end
 
