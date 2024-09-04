@@ -428,19 +428,22 @@ defmodule Hwsmartcell do
         const solution = document.getElementById('solution').value;
         const correctAnswer = document.getElementById('correct_answer').value;
 
-        ctx.pushEvent('save_edits', {
-          problem_number: problemNumber,
-          problem_statement: problemStatement,
-          hint: hint,
-          solution: solution,
-          correct_answer: correctAnswer
-        });
+        // Ensure no empty values are passed to prevent crashes
+        const safePayload = {
+          problem_number: problemNumber || payload.problem_number,
+          problem_statement: problemStatement || payload.problem_statement,
+          hint: hint || payload.hint,
+          solution: solution || payload.solution,
+          correct_answer: correctAnswer || payload.correct_answer
+        };
+
+        ctx.pushEvent('save_edits', safePayload);
 
         // Update header and content
-        document.getElementById('header').textContent = `Problem ${problemNumber}`;
-        tabs.problem_tab = problemStatement;
-        tabs.hint_tab = hint;
-        tabs.solution_tab = solution;
+        document.getElementById('header').textContent = `Problem ${safePayload.problem_number}`;
+        tabs.problem_tab = safePayload.problem_statement;
+        tabs.hint_tab = safePayload.hint;
+        tabs.solution_tab = safePayload.solution;
 
         // Switch back to view mode
         document.querySelector('section').classList.toggle('hidden');
