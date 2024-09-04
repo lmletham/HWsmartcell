@@ -85,22 +85,22 @@ defmodule Hwsmartcell do
   def to_source(attrs) do
     """
     #Problem_Number:
-    #{attrs["problem_number"]}
+    """ <> attrs["problem_number"] <> """
 
     #Problem_Statement:
-    #{inspect(attrs["problem_statement"], raw: true)}
+    """ <> attrs["problem_statement"] <> """
 
     #Hint:
-    #{inspect(attrs["hint"], raw: true)}
+    """ <> attrs["hint"] <> """
 
     #Solution:
-    #{inspect(attrs["solution"], raw: true)}
+    """ <> attrs["solution"] <> """
 
     #Correct Answer:
-    #{inspect(attrs["correct_answer"], raw: true)}
+    """ <> attrs["correct_answer"] <> """
 
     #Test Code:
-    #{attrs["test_code"]}
+    """ <> attrs["test_code"] <> """
     """
   end
 
