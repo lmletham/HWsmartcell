@@ -16,4 +16,4 @@ I only need to have the above in the startup cell because all my dependencies ar
 
 
 # Code Notes
-I fixed the to_source function by using the s sigil and assigning to _ 
+The output I am trying to suppress is a livebook compilation output. Does not appear possible to suppress.
