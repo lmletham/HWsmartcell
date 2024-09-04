@@ -100,7 +100,7 @@ defmodule Hwsmartcell do
     _ = ~s#{inspect(attrs["correct_answer"], raw: true)}
 
     #Test Code:
-    _ = Code.eval_string("#{attrs["test_code"]}")
+    _ = fn -> #{attrs["test_code"]} end.()
     """
   end
 
