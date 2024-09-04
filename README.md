@@ -16,4 +16,4 @@ I only need to have the above in the startup cell because all my dependencies ar
 
 
 # Code Notes
-Successfully changed the to_source function to append Test_code to the bottom of the smartcell. You can hit the "Toggle Source" button to see it. I ran the elixir cell below and got feedback appended correctly.
+I fixed the to_source function by using the s sigil and assigning to _ 
