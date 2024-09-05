@@ -87,6 +87,9 @@ defmodule Hwsmartcell do
     #Problem_Number:
     _ = "#{attrs["problem_number"]}"
 
+    #Problem_Type
+    _ = "#{attrs["problem_type"]}"
+
     #Problem_Statement:
     _ = ~s#{inspect(attrs["problem_statement"], raw: true)}
 
@@ -393,6 +396,8 @@ defmodule Hwsmartcell do
       };
 
       function setActiveTab(activeTab) {
+      console.log('Problem Type:', payload.problem_type); //LML LOGGING
+
         // Set active content
         document.getElementById('content').innerHTML = tabs[activeTab];
 
@@ -481,7 +486,7 @@ defmodule Hwsmartcell do
       setActiveTab('problem_tab');
 
 
-      // Event listeners for tabsa
+      // Event listeners for tabs
       document.getElementById('problem_tab').addEventListener('click', () => setActiveTab('problem_tab'));
       document.getElementById('hint_tab').addEventListener('click', () => setActiveTab('hint_tab'));
       document.getElementById('solution_tab').addEventListener('click', () => setActiveTab('solution_tab'));
