@@ -16,4 +16,4 @@ I only need to have the above in the startup cell because all my dependencies ar
 
 
 # Code Notes
-The output I am trying to suppress is a livebook compilation output. Does not appear possible to suppress.
+OK. This is almost working. I have highlighting fixed on edit. and the padding is working. I just need to hide the input box on tabs: hint and solution as well as on the text="elixir" Which I thought it was doing already :/
