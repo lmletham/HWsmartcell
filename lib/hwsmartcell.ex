@@ -156,12 +156,17 @@ defmodule Hwsmartcell do
   end
 
   defp process_with_makeup(text) do
-    # Process the text, searching for Elixir code blocks
-    Regex.replace(~r/```elixir\n(.*?)\n```/s, text, fn _match, code ->
-      # Apply syntax highlighting to the code block using Makeup
+    # Process the text, searching for Elixir code blocks between ```elixir and ```
+    Regex.replace(~r/```elixir\n(.+?)\n```/s, text, fn _match, code ->
+      # Apply syntax highlighting using Makeup
       highlighted_code = Makeup.highlight(code, lexer: Makeup.Lexers.ElixirLexer)
 
-      # Wrap the highlighted code in <pre> and <code> tags
+      # Perform custom string replacement for specific function names and keywords
+      highlighted_code = highlighted_code
+        |> String.replace(~r/(?<=[^a-zA-Z0-9_])puts(?=[^a-zA-Z0-9_])/, ~s(<span class="nf">puts</span>))
+        |> String.replace(~r/(?<=[^a-zA-Z0-9_])answer(?=[^a-zA-Z0-9_])/, ~s(<span class="nf">answer</span>))
+
+      # Wrap the highlighted code in <pre> and <code> tags with additional margin and padding
       "<pre style=\"margin-top: 1rem; margin-bottom: 0; padding: 1rem; background-color: #111827;\"><code class=\"highlight\">#{highlighted_code}</code></pre>"
     end)
     # Replace single newlines with <br> tags
@@ -169,6 +174,7 @@ defmodule Hwsmartcell do
     # Handle double newlines separately as paragraph breaks
     |> String.replace(~r/<br><br>/, "<p></p>")
   end
+
 
 
   defp makeup_stylesheet do
