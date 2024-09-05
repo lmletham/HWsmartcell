@@ -181,6 +181,9 @@ defmodule Hwsmartcell do
 
     pre {
       border-radius: 0.5rem;
+      margin-top: 1rem;
+      margin-bottom: 0;
+      padding: 1rem;
     }
 
     .highlight .unselectable {
