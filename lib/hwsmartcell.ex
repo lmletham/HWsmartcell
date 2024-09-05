@@ -429,7 +429,7 @@ defmodule Hwsmartcell do
             }
           });
         } else {
-          inputSection.innerHTML = ""; // Clear the input section on other tabs
+          document.getElementById('input_section').innerHTML = ""; // Clear the input section on other tabs
         }
       }
 
