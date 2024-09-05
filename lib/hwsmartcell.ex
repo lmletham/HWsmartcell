@@ -156,19 +156,20 @@ defmodule Hwsmartcell do
   end
 
   defp process_with_makeup(text) do
-    # Split the text into sections outside and inside code blocks
-    Regex.replace(~r/```elixir\n(.+?)\n```/s, text, fn _match, code ->
-      # Apply syntax highlighting to the code block
+    # Process the text, searching for Elixir code blocks
+    Regex.replace(~r/```elixir\n(.*?)\n```/s, text, fn _match, code ->
+      # Apply syntax highlighting to the code block using Makeup
       highlighted_code = Makeup.highlight(code, lexer: Makeup.Lexers.ElixirLexer)
 
-      # Wrap the highlighted code in a pre block with padding
+      # Wrap the highlighted code in <pre> and <code> tags
       "<pre style=\"margin-top: 1rem; margin-bottom: 0; padding: 1rem; background-color: #111827;\"><code class=\"highlight\">#{highlighted_code}</code></pre>"
     end)
-    # After processing code blocks, replace newlines in the remaining text with <br> tags
-    |> String.replace(~r/(?!<\/?pre[^>]*>)(\n)(?!<\/?code[^>]*>)/, "<br>")
-    # Ensure any double newlines are converted into paragraph breaks for larger spacing
-    |> String.replace(~r/\n\n/, "<p></p>")
+    # Replace single newlines with <br> tags
+    |> String.replace(~r/\n/, "<br>")
+    # Handle double newlines separately as paragraph breaks
+    |> String.replace(~r/<br><br>/, "<p></p>")
   end
+
 
   defp makeup_stylesheet do
     """
