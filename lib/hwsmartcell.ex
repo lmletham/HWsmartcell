@@ -181,7 +181,7 @@ defmodule Hwsmartcell do
 
     pre {
       border-radius: 0.5rem;
-      margin-top: 0.5rem;
+      margin-top: 0.2rem;
       margin-bottom: 0;
       padding: 1rem;
     }
