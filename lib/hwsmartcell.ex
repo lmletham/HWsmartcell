@@ -315,7 +315,7 @@ defmodule Hwsmartcell do
 
       // Include Makeup CSS from the payload
       const makeupStyle = document.createElement("style");
-      makeupStyle.textContent = payload.makeup_css;
+      makeupStyle.textContent = payload.makeup_css || '';
       document.head.appendChild(makeupStyle);
 
       ctx.root.innerHTML = `
