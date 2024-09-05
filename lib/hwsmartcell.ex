@@ -121,6 +121,7 @@ defmodule Hwsmartcell do
   @impl true
   def handle_event("save_edits", %{
     "problem_number" => problem_number,
+    "problem_type" => problem_type,
     "problem_statement" => problem_statement,
     "hint" => hint,
     "solution" => solution,
@@ -129,6 +130,7 @@ defmodule Hwsmartcell do
   }, ctx) do
     ctx = assign(ctx,
     problem_number: problem_number,
+    problem_type: problem_type,
     problem_statement: problem_statement,
     hint: hint,
     solution: solution,
@@ -144,6 +146,7 @@ defmodule Hwsmartcell do
     # Send the rendered HTML and CSS to the client-side for display
     broadcast_event(ctx, "refresh", %{
       problem_number: problem_number,
+      problem_type: problem_type,
       problem_statement: rendered_problem_statement,
       hint: rendered_hint,
       solution: rendered_solution,
