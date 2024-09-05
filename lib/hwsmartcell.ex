@@ -406,28 +406,32 @@ defmodule Hwsmartcell do
 
 
         // Display input only on the Problem Statement tab
-        if (activeTab === 'problem_tab' && payload.problem_type === "text") {
-          document.getElementById('input_section').innerHTML = `
-            <input type="text" id="text_input" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Type your answer here...">
-            <button id="submit_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Submit</button>
-          `;
+        if (activeTab === 'problem_tab') {
+          if (payload.problem_type ==="text") {
+            document.getElementById('input_section').innerHTML = `
+              <input type="text" id="text_input" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Type your answer here...">
+              <button id="submit_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Submit</button>
+            `;
 
-          const textInput = document.getElementById('text_input');
-          const submitButton = document.getElementById('submit_button');
+            const textInput = document.getElementById('text_input');
+            const submitButton = document.getElementById('submit_button');
 
-          // Event listener for the submit button
-          submitButton.addEventListener("click", () => {
-            const inputValue = textInput.value;
-            ctx.pushEvent("check_answer", { input_value: inputValue });
-          });
+            // Event listener for the submit button
+            submitButton.addEventListener("click", () => {
+              const inputValue = textInput.value;
+              ctx.pushEvent("check_answer", { input_value: inputValue });
+            });
 
-          // Event listener for the "Enter" key press
-          textInput.addEventListener("keydown", (event) => {
-            if (event.key === "Enter") {
-              event.preventDefault(); // Prevent form submission or other default behavior
-              submitButton.click(); // Trigger the submit button click
-            }
-          });
+            // Event listener for the "Enter" key press
+            textInput.addEventListener("keydown", (event) => {
+              if (event.key === "Enter") {
+                event.preventDefault(); // Prevent form submission or other default behavior
+                submitButton.click(); // Trigger the submit button click
+              }
+            });
+          } else if (payload.problem_type === "elixir"){
+            document.getElementById('input_section').innerHTML = ""; // hide input box if problem_type = "elixir"
+          }
         } else {
           document.getElementById('input_section').innerHTML = ""; // Clear the input section on other tabs
         }
