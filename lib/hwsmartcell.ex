@@ -27,8 +27,6 @@ defmodule Hwsmartcell do
     solution = attrs["solution"] || "Atom"
     correct_answer = attrs["correct_answer"] || ""
     test_code = attrs["test_code"] || ""
-
-    #Determine whether to show the input box
     show_input_box = problem_type == "text"
 
     # Process the problem statement with Makeup
@@ -77,7 +75,8 @@ defmodule Hwsmartcell do
       "hint" => ctx.assigns.hint,
       "solution" => ctx.assigns.solution,
       "correct_answer" => ctx.assigns.correct_answer,
-      "test_code" => ctx.assigns.test_code
+      "test_code" => ctx.assigns.test_code,
+      "show_input_box" => ctx.assigns.show_input_box
     }
   end
 
@@ -126,7 +125,8 @@ defmodule Hwsmartcell do
     "solution" => solution,
     "correct_answer" => correct_answer,
     "test_code" => test_code,
-    "problem_type" => problem_type
+    "problem_type" => problem_type,
+    "show_input_box" => show_input_box
   }, ctx) do
 
     #recalculate show_input_box based on teh updated problem_type
@@ -136,6 +136,7 @@ defmodule Hwsmartcell do
     ctx = assign(ctx,
     problem_number: problem_number,
     problem_statement: problem_statement,
+    problem_type: problem_type,
     hint: hint,
     solution: solution,
     correct_answer: correct_answer,
