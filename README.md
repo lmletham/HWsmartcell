@@ -16,4 +16,4 @@ I only need to have the above in the startup cell because all my dependencies ar
 
 
 # Code Notes
-Working cell. js split out. tab cycling still breaks elixir hide.
+Working as well as it does: cleaned up how I toggle main and edit sections. tab cycling still breaks elixir hide.
