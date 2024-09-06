@@ -496,7 +496,6 @@ defmodule Hwsmartcell do
         payload.problem_type = payload.problem_type;
         payload.correct_answer = payload.correct_answer;
         payload.test_code = payload.test_code;
-        payload.show_input_box = payload.show_input_box;
 
         // Update the header
         document.getElementById('header').textContent = `Problem ${payload.problem_number}`;
@@ -510,7 +509,7 @@ defmodule Hwsmartcell do
         displayContent("problem_statement", problemTab, payload.problem_type);
 
         // Rebind the tab event listeners
-        //updateTabListeners();
+        //updateTabListeners(payload.problem_type);
       });
     }
     """
