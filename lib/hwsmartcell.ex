@@ -489,7 +489,7 @@ defmodule Hwsmartcell do
         // Update the payload and tabs after highlighting is done.
         payload.problem_number = problemNumber;
         payload.problem_type = problemType;
-        payload.problem_statement = problemStatement;
+        //payload.problem_statement = problemStatement; //LML comment this out to fix the smartcell crash
         payload.hint = hint;
         payload.solution = solution;
         payload.correct_answer = correctAnswer;
