@@ -487,6 +487,15 @@ defmodule Hwsmartcell do
 
       });
 
+      // Initial tab display
+      displayContent('problem_tab');
+
+      // Event listeners for tabsa
+      document.getElementById('problem_tab').addEventListener('click', () => setActiveTab('problem_tab'));
+      document.getElementById('hint_tab').addEventListener('click', () => setActiveTab('hint_tab'));
+      document.getElementById('solution_tab').addEventListener('click', () => setActiveTab('solution_tab'));
+
+
 
       // Handle feedback events
       ctx.handleEvent("feedback", ({ message, color }) => {
