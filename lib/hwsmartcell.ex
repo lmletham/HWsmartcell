@@ -130,7 +130,7 @@ defmodule Hwsmartcell do
   }, ctx) do
 
     #recalculate show_input_box based on teh updated problem_type
-    show_input_box = problem_type == "text" #boolean
+    #show_input_box = problem_type == "text" #boolean
 
 
     ctx = assign(ctx,
