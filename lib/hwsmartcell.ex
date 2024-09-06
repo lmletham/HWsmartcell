@@ -473,31 +473,10 @@ defmodule Hwsmartcell do
           test_code: testCode
         });
 
-        // Highlighting logic - apply `process_with_makeup` for both types
-        ctx.pushEvent('process_with_makeup', { problem_statement: problemStatement }, (highlightedContent) => {
-            // Update the payload and tabs after highlighting is done.
-            payload.problem_statement = highlightedContent.problem_statement;
-
-            // Update tabs
-            tabs.problem_statement = highlightedContent.problem_statement;
-
-            // Refresh the active tab
-            displayContent("problem_statement", problemTab);
-
-            // Switch back to view mode
-            mainSection.classList.toggle("hidden");
-            editSection.classList.toggle("hidden");
-
-            // Update the payload and tabs after highlighting is done.
-            payload.problem_number = problemNumber;
-            payload.problem_type = problemType;
-            payload.hint = hint;
-            payload.solution = solution;
-            payload.correct_answer = correctAnswer;
-            payload.test_code = testCode;
-        });
+        // Switch back to view mode
+        mainSection.classList.toggle("hidden");
+        editSection.classList.toggle("hidden");
       });
-
 
       // Handle feedback events
       ctx.handleEvent("feedback", ({ message, color }) => {
@@ -506,12 +485,24 @@ defmodule Hwsmartcell do
       });
 
       ctx.handleEvent("refresh", (payload) => {
-        tabs.problem_tab = payload.problem_statement;
-        tabs.hint_tab = payload.hint;
-        tabs.solution_tab = payload.solution;
-        document.getElementById("test_code").value = payload.test_code;
-        displayContent("problem_statement", problemTab);
+        // Update the payload
+        payload.problem_number = payload.problem_number;
+        payload.problem_type = payload.problem_type;
+        payload.correct_answer = payload.correct_answer;
+        payload.test_code = payload.test_code;
 
+        // Update the header
+        document.getElementById('header').textContent = `Problem ${payload.problem_number}`;
+
+        // Update the tabs with the new content
+        tabs["problem_statement"] = payload.problem_statement;
+        tabs["hint"] = payload.hint;
+        tabs["solution"] = payload.solution;
+
+        // Re-display the current tab content
+        // Assuming 'currentTab' keeps track of the current tab
+        // If not, you can default to "problem_statement"
+        displayContent("problem_statement", problemTab);
       });
     }
     """
