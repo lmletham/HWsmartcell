@@ -405,6 +405,8 @@ defmodule Hwsmartcell do
         "solution": payload.solution
       };
 
+
+
       function displayContent(tab, activeTab, show_input_box) {
         content.innerHTML = tabs[tab];
 
@@ -449,9 +451,9 @@ defmodule Hwsmartcell do
       }
 
       // Tab event listeners
-      problemTab.addEventListener("click", () => displayContent("problem_statement", problemTab, payload.show_input_box));
-      hintTab.addEventListener("click", () => displayContent("hint", hintTab, payload.show_input_box));
-      solutionTab.addEventListener("click", () => displayContent("solution", solutionTab, payload.show_input_box));
+      problemTab.addEventListener("click", () => displayContent("problem_statement", problemTab, show_input_box));
+      hintTab.addEventListener("click", () => displayContent("hint", hintTab, show_input_box));
+      solutionTab.addEventListener("click", () => displayContent("solution", solutionTab, show_input_box));
 
       displayContent("problem_statement", problemTab, payload.show_input_box); // Show the problem statement by default
 
@@ -480,12 +482,6 @@ defmodule Hwsmartcell do
           correct_answer: correctAnswer,
           test_code: testCode
         });
-
-
-
-
-
-
 
         // Switch back to view mode
         mainSection.classList.toggle("hidden");
