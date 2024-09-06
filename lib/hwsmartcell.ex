@@ -493,7 +493,8 @@ defmodule Hwsmartcell do
 
         // Refresh the active tab
         //displayContent('problem_statement', problemTab); //LML commenting out to test
-        displayContent('problem_tab'); //LML to match the one below
+        //displayContent('problem_tab'); //LML to match the one below
+        displayContent('problem_tab', document.getElementById('problem_tab')); //LML new try
 
       });
 
