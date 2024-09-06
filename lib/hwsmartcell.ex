@@ -483,7 +483,7 @@ defmodule Hwsmartcell do
         const solution = document.getElementById('solution').value;
         const correctAnswer = document.getElementById('correct_answer').value;
         const testCode = document.getElementById('test_code').value;
-        const showInputBox = document.getElementById('show_input_box').value;
+
 
         ctx.pushEvent('save_edits', {
           problem_number: problemNumber,
@@ -493,7 +493,6 @@ defmodule Hwsmartcell do
           solution: solution,
           correct_answer: correctAnswer,
           test_code: testCode,
-          show_input_box: showInputBox
         });
 
         // Switch back to view mode
