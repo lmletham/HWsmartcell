@@ -16,5 +16,4 @@ I only need to have the above in the startup cell because all my dependencies ar
 
 
 # Code Notes
-testing if mix compile did anything?
-
+Working cell. js split out. tab cycling still breaks elixir hide.
