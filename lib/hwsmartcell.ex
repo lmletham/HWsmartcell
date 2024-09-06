@@ -478,6 +478,9 @@ defmodule Hwsmartcell do
           test_code: testCode,
         });
 
+        // Re-display the current tab content
+        displayContent("problem_statement", problemTab, payload.problem_type);
+
         // Switch back to view mode
         mainSection.classList.toggle("hidden");
         editSection.classList.toggle("hidden");
