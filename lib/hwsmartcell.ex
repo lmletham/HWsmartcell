@@ -150,7 +150,8 @@ defmodule Hwsmartcell do
       solution: rendered_solution,
       correct_answer: correct_answer,
       test_code: test_code,
-      makeup_css: ctx.assigns.makeup_css
+      makeup_css: ctx.assigns.makeup_css,
+      show_input_box: ctx.assigns.show_input_box
     })
 
     {:noreply, ctx}
