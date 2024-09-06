@@ -16,4 +16,4 @@ I only need to have the above in the startup cell because all my dependencies ar
 
 
 # Code Notes
-working: everything except. Broken: "elixir" hide input box. So we swapped again back.
+working: everything, except tab cycling causes input box to reappear.
