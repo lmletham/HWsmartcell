@@ -304,18 +304,7 @@ defmodule Hwsmartcell do
   asset "main.js" do
     """
     export function init(ctx, payload) {
-      // Include Tailwind CSS
-      const tailwindLink = document.createElement("link");
-      tailwindLink.rel = "stylesheet";
-      tailwindLink.href = "https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css";
-      document.head.appendChild(tailwindLink);
-
-      // Include Makeup CSS from the payload
-      const makeupStyle = document.createElement("style");
-      makeupStyle.textContent = payload.makeup_css || '';
-      document.head.appendChild(makeupStyle);
-
-      // Initialize the UI
+      // Set up the initial layout
       ctx.root.innerHTML = `
         <section class="bg-gray-100 p-4 rounded-md relative">
           <button id="edit_button" class="absolute top-2 right-2 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">Edit</button>
@@ -325,122 +314,59 @@ defmodule Hwsmartcell do
             <button id="hint_tab" class="tab_button text-gray-500 py-2 px-4">Hint</button>
             <button id="solution_tab" class="tab_button text-gray-500 py-2 px-4">Solution</button>
           </div>
-          <div id="content" class="mt-4 p-4 bg-white rounded-md shadow-md">${payload.problem_statement}</div>
+          <div id="content" class="mt-4 p-4 bg-white rounded-md shadow-md"></div>
           <div id="input_section" class="mt-4"></div>
-          <div id="feedback" class="mt-4 font-bold"></div>
-        </section>
-
-        <section id="edit_section" class="bg-white p-4 rounded-md hidden">
-          <h2 class="text-xl font-bold mb-4">Edit Problem</h2>
-          <!-- Your Edit Form goes here -->
         </section>
       `;
 
-      // Store the latest problem statement, hint, and solution in a separate object
-      let tabs = {
+      // Initial call to render the default content (problem_statement tab)
+      displayContent("problem_statement", ctx.root.querySelector("#problem_tab"), payload.problem_type, ctx, {
         "problem_statement": payload.problem_statement,
         "hint": payload.hint,
         "solution": payload.solution
-      };
+      });
 
-      // Set up the tab listeners only once
-      function updateTabListeners(problem_type) {
-        const problemTab = ctx.root.querySelector("#problem_tab");
-        const hintTab = ctx.root.querySelector("#hint_tab");
-        const solutionTab = ctx.root.querySelector("#solution_tab");
-
-        // Check if the elements exist before attaching event listeners
-        if (problemTab) {
-          problemTab.addEventListener("click", () => displayContent("problem_statement", problemTab, problem_type, ctx, tabs));
-        } else {
-          console.error("Problem tab not found");
-        }
-
-        if (hintTab) {
-          hintTab.addEventListener("click", () => displayContent("hint", hintTab, problem_type, ctx, tabs));
-        } else {
-          console.error("Hint tab not found");
-        }
-
-        if (solutionTab) {
-          solutionTab.addEventListener("click", () => displayContent("solution", solutionTab, problem_type, ctx, tabs));
-        } else {
-          console.error("Solution tab not found");
-        }
-      }
-
-      updateTabListeners(payload.problem_type);
-
-      // Display default tab content
-      displayContent("problem_statement", ctx.root.querySelector("#problem_tab"), payload.problem_type, ctx, tabs);
-
-      // Handle the 'refresh' event
-      ctx.handleEvent("refresh", (payload) => {
-        // Update the header
-        document.getElementById('header').textContent = `Problem ${payload.problem_number}`;
-
-        // Update the tabs object with new data
-        tabs = {
+      // Set up event listeners for switching tabs (handled once)
+      ctx.root.querySelector("#problem_tab").addEventListener("click", () => {
+        displayContent("problem_statement", ctx.root.querySelector("#problem_tab"), payload.problem_type, ctx, {
           "problem_statement": payload.problem_statement,
           "hint": payload.hint,
           "solution": payload.solution
-        };
-
-        // Re-display the current tab content with updated data
-        displayContent("problem_statement", ctx.root.querySelector("#problem_tab"), payload.problem_type, ctx, tabs);
+        });
       });
 
-      // Edit and save button logic
-      const editButton = ctx.root.querySelector("#edit_button");
-      const mainSection = ctx.root.querySelector("section");
-      const editSection = ctx.root.querySelector("#edit_section");
-
-      // Check if the edit button exists before attaching an event listener
-      if (editButton) {
-        editButton.addEventListener("click", () => {
-          mainSection.classList.toggle("hidden");
-          editSection.classList.toggle("hidden");
+      ctx.root.querySelector("#hint_tab").addEventListener("click", () => {
+        displayContent("hint", ctx.root.querySelector("#hint_tab"), payload.problem_type, ctx, {
+          "problem_statement": payload.problem_statement,
+          "hint": payload.hint,
+          "solution": payload.solution
         });
-      } else {
-        console.error("Edit button not found");
-      }
+      });
 
-      const saveButton = document.getElementById('save_button');
-      if (saveButton) {
-        saveButton.addEventListener('click', () => {
-          const problemNumber = document.getElementById('problem_number').value;
-          const problemType = document.getElementById('problem_type').value;
-          const problemStatement = document.getElementById('problem_statement').value;
-          const hint = document.getElementById('hint').value;
-          const solution = document.getElementById('solution').value;
-          const correctAnswer = document.getElementById('correct_answer').value;
-          const testCode = document.getElementById('test_code').value;
-
-          // Update the tabs object with the saved data
-          tabs = {
-            "problem_statement": problemStatement,
-            "hint": hint,
-            "solution": solution
-          };
-
-          ctx.pushEvent('save_edits', {
-            problem_number: problemNumber,
-            problem_type: problemType,
-            problem_statement: problemStatement,
-            hint: hint,
-            solution: solution,
-            correct_answer: correctAnswer,
-            test_code: testCode,
-          });
-
-          // Switch back to view mode
-          mainSection.classList.toggle("hidden");
-          editSection.classList.toggle("hidden");
+      ctx.root.querySelector("#solution_tab").addEventListener("click", () => {
+        displayContent("solution", ctx.root.querySelector("#solution_tab"), payload.problem_type, ctx, {
+          "problem_statement": payload.problem_statement,
+          "hint": payload.hint,
+          "solution": payload.solution
         });
-      } else {
-        console.error("Save button not found");
-      }
+      });
+
+      // Handle server-side refresh event (called once)
+      ctx.handleEvent("refresh", (newPayload) => {
+        // Update the content with the new payload when the refresh event is received
+        displayContent("problem_statement", ctx.root.querySelector("#problem_tab"), newPayload.problem_type, ctx, {
+          "problem_statement": newPayload.problem_statement,
+          "hint": newPayload.hint,
+          "solution": newPayload.solution
+        });
+
+        // Optionally, update the header if necessary
+        document.getElementById('header').textContent = `Problem ${newPayload.problem_number}`;
+      });
     }
+
+
+
 
     function displayContent(tab, activeTab, problem_type, ctx, tabs) {
       const content = ctx.root.querySelector("#content");
@@ -467,25 +393,21 @@ defmodule Hwsmartcell do
         const textInput = document.getElementById('text_input');
         const submitButton = document.getElementById('submit_button');
 
-        // Ensure that the input and submit button exist before attaching listeners
-        if (textInput && submitButton) {
-          submitButton.addEventListener("click", () => {
-            const inputValue = textInput.value;
-            ctx.pushEvent("check_answer", { input_value: inputValue });
-          });
+        // Event listener for the submit button
+        submitButton.addEventListener("click", () => {
+          const inputValue = textInput.value;
+          ctx.pushEvent("check_answer", { input_value: inputValue });
+        });
 
-          // Event listener for "Enter" key press
-          textInput.addEventListener("keydown", (event) => {
-            if (event.key === "Enter") {
-              event.preventDefault();
-              submitButton.click();
-            }
-          });
-        } else {
-          console.error("Input or submit button not found");
-        }
+        // Optional: Handle "Enter" key press
+        textInput.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            submitButton.click(); // Trigger the submit button click
+          }
+        });
       } else {
-        inputSection.innerHTML = ""; // Clear input section if it's not the problem statement
+        inputSection.innerHTML = ""; // Clear input section if it's not the problem statement tab
       }
     }
 
