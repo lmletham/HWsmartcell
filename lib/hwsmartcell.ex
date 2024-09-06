@@ -169,6 +169,6 @@ defmodule Hwsmartcell do
   end
 
   defp makeup_stylesheet do
-      File.read!("../assets/main.css")
+      File.read!("../../lib/assets/main.css")
   end
 end
