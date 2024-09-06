@@ -315,6 +315,7 @@ defmodule Hwsmartcell do
       makeupStyle.textContent = payload.makeup_css || '';
       document.head.appendChild(makeupStyle);
 
+      // Initialize the UI
       ctx.root.innerHTML = `
         <style>
           pill {
@@ -379,76 +380,33 @@ defmodule Hwsmartcell do
         </section>
       `;
 
-      const problemTab = ctx.root.querySelector("#problem_tab");
-      const hintTab = ctx.root.querySelector("#hint_tab");
-      const solutionTab = ctx.root.querySelector("#solution_tab");
-      const content = ctx.root.querySelector("#content");
-      const inputSection = ctx.root.querySelector("#input_section");
-      const feedbackSection = ctx.root.querySelector("#feedback");
-      const editButton = ctx.root.querySelector("#edit_button");
-      const editSection = ctx.root.querySelector("#edit_section");
-      const mainSection = ctx.root.querySelector("section");
-
       const tabs = {
         "problem_statement": payload.problem_statement,
         "hint": payload.hint,
         "solution": payload.solution
       };
 
-      //Tab Event Listeners
-      function updateTabListeners(a) {
-        problemTab.addEventListener("click", () => displayContent("problem_statement", problemTab, a));
-        hintTab.addEventListener("click", () => displayContent("hint", hintTab, a));
-        solutionTab.addEventListener("click", () => displayContent("solution", solutionTab, a));
+      // Set up the tab listeners only once
+      function updateTabListeners(problem_type) {
+        const problemTab = ctx.root.querySelector("#problem_tab");
+        const hintTab = ctx.root.querySelector("#hint_tab");
+        const solutionTab = ctx.root.querySelector("#solution_tab");
+
+        problemTab.addEventListener("click", () => displayContent("problem_statement", problemTab, problem_type, ctx, tabs));
+        hintTab.addEventListener("click", () => displayContent("hint", hintTab, problem_type, ctx, tabs));
+        solutionTab.addEventListener("click", () => displayContent("solution", solutionTab, problem_type, ctx, tabs));
       }
 
       updateTabListeners(payload.problem_type);
 
-
-      function displayContent(tab, activeTab, arg) {
-        content.innerHTML = tabs[tab];
-
-        // Update active class
-        document.querySelectorAll(".tab_button").forEach(btn => {
-          btn.classList.remove("text-blue-500", "font-bold", "border-b-2", "border-blue-500");
-          btn.classList.add("text-gray-500");
-        });
-        activeTab.classList.add("text-blue-500", "font-bold", "border-b-2", "border-blue-500");
-        activeTab.classList.remove("text-gray-500");
-
-        // Display input only on the Problem Statement tab
-        if (tab === "problem_statement" && arg ==="text") {
-          inputSection.innerHTML = `
-            <input type="text" id="text_input" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Type your answer here...">
-            <button id="submit_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Submit</button>
-          `;
-
-          const textInput = document.getElementById('text_input');
-          const submitButton = document.getElementById('submit_button');
-
-          // Event listener for the submit button
-          submitButton.addEventListener("click", () => {
-            const inputValue = textInput.value;
-            ctx.pushEvent("check_answer", { input_value: inputValue });
-          });
-
-          // Event listener for the "Enter" key press
-          textInput.addEventListener("keydown", (event) => {
-            if (event.key === "Enter") {
-              event.preventDefault(); // Prevent form submission or other default behavior
-              submitButton.click(); // Trigger the submit button click
-            }
-          });
-        } else {
-          inputSection.innerHTML = ""; // Clear the input section on other tabs
-        }
-      }
-
-
-
-      displayContent("problem_statement", problemTab, payload.problem_type); // Show the problem statement by default
+      // Display default tab content
+      displayContent("problem_statement", ctx.root.querySelector("#problem_tab"), payload.problem_type, ctx, tabs);
 
       // Edit button logic
+      const editButton = ctx.root.querySelector("#edit_button");
+      const mainSection = ctx.root.querySelector("section");
+      const editSection = ctx.root.querySelector("#edit_section");
+
       editButton.addEventListener("click", () => {
         mainSection.classList.toggle("hidden");
         editSection.classList.toggle("hidden");
@@ -463,7 +421,6 @@ defmodule Hwsmartcell do
         const solution = document.getElementById('solution').value;
         const correctAnswer = document.getElementById('correct_answer').value;
         const testCode = document.getElementById('test_code').value;
-
 
         ctx.pushEvent('save_edits', {
           problem_number: problemNumber,
@@ -482,31 +439,67 @@ defmodule Hwsmartcell do
 
       // Handle feedback events
       ctx.handleEvent("feedback", ({ message, color }) => {
+        const feedbackSection = ctx.root.querySelector("#feedback");
         feedbackSection.textContent = message;
         feedbackSection.className = `mt-4 font-bold ${color}`;
       });
 
       ctx.handleEvent("refresh", (payload) => {
-        // Update the payload
-        payload.problem_number = payload.problem_number;
-        payload.problem_type = payload.problem_type;
-        payload.correct_answer = payload.correct_answer;
-        payload.test_code = payload.test_code;
+        const tabs = {
+          "problem_statement": payload.problem_statement,
+          "hint": payload.hint,
+          "solution": payload.solution
+        };
 
         // Update the header
         document.getElementById('header').textContent = `Problem ${payload.problem_number}`;
 
-        // Update the tabs with the new content
-        tabs["problem_statement"] = payload.problem_statement;
-        tabs["hint"] = payload.hint;
-        tabs["solution"] = payload.solution;
-
         // Re-display the current tab content
-        displayContent("problem_statement", problemTab, payload.problem_type);
-
-        // Rebind the tab event listeners
-        //updateTabListeners(payload.problem_type);
+        displayContent("problem_statement", ctx.root.querySelector("#problem_tab"), payload.problem_type, ctx, tabs);
       });
+    }
+
+    function displayContent(tab, activeTab, problem_type, ctx, tabs) {
+      const content = ctx.root.querySelector("#content");
+      const inputSection = ctx.root.querySelector("#input_section");
+
+      // Render the content for the active tab
+      content.innerHTML = tabs[tab];
+
+      // Update the active tab's styling
+      document.querySelectorAll(".tab_button").forEach(btn => {
+        btn.classList.remove("text-blue-500", "font-bold", "border-b-2", "border-blue-500");
+        btn.classList.add("text-gray-500");
+      });
+      activeTab.classList.add("text-blue-500", "font-bold", "border-b-2", "border-blue-500");
+      activeTab.classList.remove("text-gray-500");
+
+      // Display or hide input section based on problem_type
+      if (tab === "problem_statement" && problem_type === "text") {
+        inputSection.innerHTML = `
+          <input type="text" id="text_input" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Type your answer here...">
+          <button id="submit_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Submit</button>
+        `;
+
+        const textInput = document.getElementById('text_input');
+        const submitButton = document.getElementById('submit_button');
+
+        // Event listener for submit button
+        submitButton.addEventListener("click", () => {
+          const inputValue = textInput.value;
+          ctx.pushEvent("check_answer", { input_value: inputValue });
+        });
+
+        // Event listener for "Enter" key press
+        textInput.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            submitButton.click();
+          }
+        });
+      } else {
+        inputSection.innerHTML = ""; // Clear input section if it's not the problem statement
+      }
     }
     """
   end
