@@ -402,7 +402,7 @@ defmodule Hwsmartcell do
         solutionTab.addEventListener("click", () => displayContent("solution", solutionTab, a));
       }
 
-      updateTabListeners(payload.problem_type);
+      updateTabListeners(problem_type);
 
 
       function displayContent(tab, activeTab, payload.problem_type) {
