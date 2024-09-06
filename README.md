@@ -16,4 +16,4 @@ I only need to have the above in the startup cell because all my dependencies ar
 
 
 # Code Notes
-working: fixed blue line issue. Broken: tab switch resets highlight
+working: everything except. Broken: "elixir" hide input box. So we swapped again back.
