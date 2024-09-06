@@ -483,31 +483,20 @@ defmodule Hwsmartcell do
 
             // Refresh the active tab
             displayContent("problem_statement", problemTab);
+
+            // Switch back to view mode
+            mainSection.classList.toggle("hidden");
+            editSection.classList.toggle("hidden");
         });
 
 
         // Update the payload and tabs after highlighting is done.
         payload.problem_number = problemNumber;
         payload.problem_type = problemType;
-        //payload.problem_statement = problemStatement; //LML comment this out to fix the smartcell crash
         payload.hint = hint;
         payload.solution = solution;
         payload.correct_answer = correctAnswer;
         payload.test_code = testCode;
-
-        // Update header and content
-        document.getElementById('header').textContent = `Problem ${problemNumber}`;
-        tabs.problem_statement = problemStatement;
-        tabs.hint = hint;
-        tabs.solution = solution;
-
-        // Switch back to view mode
-        mainSection.classList.toggle("hidden");
-        editSection.classList.toggle("hidden");
-
-        // Refresh the active tab
-        //displayContent("problem_statement", problemTab); //LML comment out
-
       });
 
 
