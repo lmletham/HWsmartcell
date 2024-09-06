@@ -16,4 +16,5 @@ I only need to have the above in the startup cell because all my dependencies ar
 
 
 # Code Notes
-smartcell loads, edit page is blank
+testing if mix compile did anything?
+
