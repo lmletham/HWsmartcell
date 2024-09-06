@@ -450,10 +450,19 @@ defmodule Hwsmartcell do
         }
       }
 
-      // Tab event listeners
-      problemTab.addEventListener("click", () => displayContent("problem_statement", problemTab, show_input_box));
-      hintTab.addEventListener("click", () => displayContent("hint", hintTab, show_input_box));
-      solutionTab.addEventListener("click", () => displayContent("solution", solutionTab, show_input_box));
+      function updateTabListeners() {
+        problemTab.addEventListener("click", () => displayContent("problem_statement", problemTab, payload.show_input_box));
+        hintTab.addEventListener("click", () => displayContent("hint", hintTab, payload.show_input_box));
+        solutionTab.addEventListener("click", () => displayContent("solution", solutionTab, payload.show_input_box));
+      }
+
+      // Call this function after `ctx.handleEvent("refresh", ...)` to rebind the event listeners with the updated `show_input_box`
+      updateTabListeners();
+
+
+
+
+
 
       displayContent("problem_statement", problemTab, payload.show_input_box); // Show the problem statement by default
 
@@ -512,6 +521,9 @@ defmodule Hwsmartcell do
 
         // Re-display the current tab content
         displayContent("problem_statement", problemTab, payload.show_input_box);
+
+        // Rebind the tab event listeners with updated show_input_box
+        updateTabListeners();
       });
     }
     """
