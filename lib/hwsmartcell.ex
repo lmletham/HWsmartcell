@@ -504,9 +504,11 @@ defmodule Hwsmartcell do
         tabs.problem_tab = payload.problem_statement;
         tabs.hint_tab = payload.hint;
         tabs.solution_tab = payload.solution;
-        document.getElementById("test_code").value = payload.test_code; // LML Comment
-        //displayContent("problem_statement", problemTab); // LML Comment
-        displayContent('problem_tab');
+        document.getElementById("test_code").value = payload.test_code;
+        //displayContent("problem_statement", problemTab); // LML Comment out
+        //displayContent('problem_tab'); //LML this one was half working
+        displayContent('problem_statement', problemTab)
+
       });
     }
     """
