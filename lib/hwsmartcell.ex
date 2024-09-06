@@ -315,7 +315,6 @@ defmodule Hwsmartcell do
       makeupStyle.textContent = payload.makeup_css || '';
       document.head.appendChild(makeupStyle);
 
-      // Set up the initial layout
       ctx.root.innerHTML = `
         <style>
           pill {
@@ -338,7 +337,7 @@ defmodule Hwsmartcell do
             <button id="hint_tab" class="tab_button text-gray-500 py-2 px-4">Hint</button>
             <button id="solution_tab" class="tab_button text-gray-500 py-2 px-4">Solution</button>
           </div>
-          <div id="content" class="mt-4 p-4 bg-white rounded-md shadow-md"></div>
+          <div id="content" class="mt-4 p-4 bg-white rounded-md shadow-md">${payload.problem_statement}</div>
           <div id="input_section" class="mt-4"></div>
           <div id="feedback" class="mt-4 font-bold"></div>
         </section>
@@ -368,138 +367,147 @@ defmodule Hwsmartcell do
             <label class="block text-gray-700 text-sm font-bold mb-2" for="solution">Solution</label>
             <textarea id="solution" rows="4" class="w-full p-2 border border-gray-300 rounded-md">${payload.solution}</textarea>
           </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="correct_answer">Correct Answer</label>
+            <input type="text" id="correct_answer" class="w-full p-2 border border-gray-300 rounded-md" value="${payload.correct_answer}">
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="test_code">Test Code</label>
+            <textarea id="test_code" rows="6" class="w-full p-2 border border-gray-300 rounded-md">${payload.test_code || ''}</textarea>
+          </div>
           <button id="save_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Save</button>
         </section>
       `;
 
-      // Initial call to render the default content
-      displayContent("problem_statement", ctx.root.querySelector("#problem_tab"), payload.problem_type, ctx, {
+      const problemTab = ctx.root.querySelector("#problem_tab");
+      const hintTab = ctx.root.querySelector("#hint_tab");
+      const solutionTab = ctx.root.querySelector("#solution_tab");
+      const content = ctx.root.querySelector("#content");
+      const inputSection = ctx.root.querySelector("#input_section");
+      const feedbackSection = ctx.root.querySelector("#feedback");
+      const editButton = ctx.root.querySelector("#edit_button");
+      const editSection = ctx.root.querySelector("#edit_section");
+      const mainSection = ctx.root.querySelector("section");
+
+      const tabs = {
         "problem_statement": payload.problem_statement,
         "hint": payload.hint,
         "solution": payload.solution
-      });
+      };
 
-      // Set up the tab listeners only once
-      ctx.root.querySelector("#problem_tab").addEventListener("click", () => {
-        displayContent("problem_statement", ctx.root.querySelector("#problem_tab"), payload.problem_type, ctx, {
-          "problem_statement": payload.problem_statement,
-          "hint": payload.hint,
-          "solution": payload.solution
+      //Tab Event Listeners
+      function updateTabListeners(a) {
+        problemTab.addEventListener("click", () => displayContent("problem_statement", problemTab, a));
+        hintTab.addEventListener("click", () => displayContent("hint", hintTab, a));
+        solutionTab.addEventListener("click", () => displayContent("solution", solutionTab, a));
+      }
+
+      updateTabListeners(payload.problem_type);
+
+
+      function displayContent(tab, activeTab, arg) {
+        content.innerHTML = tabs[tab];
+
+        // Update active class
+        document.querySelectorAll(".tab_button").forEach(btn => {
+          btn.classList.remove("text-blue-500", "font-bold", "border-b-2", "border-blue-500");
+          btn.classList.add("text-gray-500");
         });
-      });
+        activeTab.classList.add("text-blue-500", "font-bold", "border-b-2", "border-blue-500");
+        activeTab.classList.remove("text-gray-500");
 
-      ctx.root.querySelector("#hint_tab").addEventListener("click", () => {
-        displayContent("hint", ctx.root.querySelector("#hint_tab"), payload.problem_type, ctx, {
-          "problem_statement": payload.problem_statement,
-          "hint": payload.hint,
-          "solution": payload.solution
-        });
-      });
+        // Display input only on the Problem Statement tab
+        if (tab === "problem_statement" && arg ==="text") {
+          inputSection.innerHTML = `
+            <input type="text" id="text_input" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Type your answer here...">
+            <button id="submit_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Submit</button>
+          `;
 
-      ctx.root.querySelector("#solution_tab").addEventListener("click", () => {
-        displayContent("solution", ctx.root.querySelector("#solution_tab"), payload.problem_type, ctx, {
-          "problem_statement": payload.problem_statement,
-          "hint": payload.hint,
-          "solution": payload.solution
-        });
-      });
+          const textInput = document.getElementById('text_input');
+          const submitButton = document.getElementById('submit_button');
 
-      // Handle server-side refresh event (called once)
-      ctx.handleEvent("refresh", (newPayload) => {
-        displayContent("problem_statement", ctx.root.querySelector("#problem_tab"), newPayload.problem_type, ctx, {
-          "problem_statement": newPayload.problem_statement,
-          "hint": newPayload.hint,
-          "solution": newPayload.solution
-        });
+          // Event listener for the submit button
+          submitButton.addEventListener("click", () => {
+            const inputValue = textInput.value;
+            ctx.pushEvent("check_answer", { input_value: inputValue });
+          });
 
-        // Update the header
-        document.getElementById('header').textContent = `Problem ${newPayload.problem_number}`;
-      });
+          // Event listener for the "Enter" key press
+          textInput.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+              event.preventDefault(); // Prevent form submission or other default behavior
+              submitButton.click(); // Trigger the submit button click
+            }
+          });
+        } else {
+          inputSection.innerHTML = ""; // Clear the input section on other tabs
+        }
+      }
 
-      // Edit button toggling view mode
-      const editButton = ctx.root.querySelector("#edit_button");
-      const mainSection = ctx.root.querySelector("section");
-      const editSection = ctx.root.querySelector("#edit_section");
 
+
+      displayContent("problem_statement", problemTab, payload.problem_type); // Show the problem statement by default
+
+      // Edit button logic
       editButton.addEventListener("click", () => {
         mainSection.classList.toggle("hidden");
         editSection.classList.toggle("hidden");
       });
-    }
 
-    function displayContent(tab, activeTab, problem_type, ctx, tabs) {
-      const content = ctx.root.querySelector("#content");
-      const inputSection = ctx.root.querySelector("#input_section");
+      // Save button logic
+      document.getElementById('save_button').addEventListener('click', () => {
+        const problemNumber = document.getElementById('problem_number').value;
+        const problemType = document.getElementById('problem_type').value;
+        const problemStatement = document.getElementById('problem_statement').value;
+        const hint = document.getElementById('hint').value;
+        const solution = document.getElementById('solution').value;
+        const correctAnswer = document.getElementById('correct_answer').value;
+        const testCode = document.getElementById('test_code').value;
 
-      // Render the content for the active tab
-      content.innerHTML = tabs[tab];
 
-      // Update the active tab's styling
-      document.querySelectorAll(".tab_button").forEach(btn => {
-        btn.classList.remove("text-blue-500", "font-bold", "border-b-2", "border-blue-500");
-        btn.classList.add("text-gray-500");
+        ctx.pushEvent('save_edits', {
+          problem_number: problemNumber,
+          problem_type: problemType,
+          problem_statement: problemStatement,
+          hint: hint,
+          solution: solution,
+          correct_answer: correctAnswer,
+          test_code: testCode,
+        });
+
+        // Switch back to view mode
+        mainSection.classList.toggle("hidden");
+        editSection.classList.toggle("hidden");
       });
-      activeTab.classList.add("text-blue-500", "font-bold", "border-b-2", "border-blue-500");
-      activeTab.classList.remove("text-gray-500");
 
-      // Display or hide input section based on problem_type
-      if (tab === "problem_statement" && problem_type === "text") {
-        inputSection.innerHTML = `
-          <input type="text" id="text_input" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Type your answer here...">
-          <button id="submit_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Submit</button>
-        `;
+      // Handle feedback events
+      ctx.handleEvent("feedback", ({ message, color }) => {
+        feedbackSection.textContent = message;
+        feedbackSection.className = `mt-4 font-bold ${color}`;
+      });
 
-        const textInput = document.getElementById('text_input');
-        const submitButton = document.getElementById('submit_button');
+      ctx.handleEvent("refresh", (payload) => {
+        // Update the payload
+        payload.problem_number = payload.problem_number;
+        payload.problem_type = payload.problem_type;
+        payload.correct_answer = payload.correct_answer;
+        payload.test_code = payload.test_code;
 
-        // Event listener for submit button
-        submitButton.addEventListener("click", () => {
-          const inputValue = textInput.value;
-          ctx.pushEvent("check_answer", { input_value: inputValue });
-        });
+        // Update the header
+        document.getElementById('header').textContent = `Problem ${payload.problem_number}`;
 
-        // Handle "Enter" key press
-        textInput.addEventListener("keydown", (event) => {
-          if (event.key === "Enter") {
-            event.preventDefault();
-            submitButton.click();
-          }
-        });
-      } else {
-        inputSection.innerHTML = ""; // Clear input section if it's not the problem statement
-      }
+        // Update the tabs with the new content
+        tabs["problem_statement"] = payload.problem_statement;
+        tabs["hint"] = payload.hint;
+        tabs["solution"] = payload.solution;
 
-      // Save button logic (inside displayContent)
-      const saveButton = document.getElementById('save_button');
-      if (saveButton) {
-        saveButton.addEventListener('click', () => {
-          const problemNumber = document.getElementById('problem_number').value;
-          const problemType = document.getElementById('problem_type').value;
-          const problemStatement = document.getElementById('problem_statement').value;
-          const hint = document.getElementById('hint').value;
-          const solution = document.getElementById('solution').value;
+        // Re-display the current tab content
+        displayContent("problem_statement", problemTab, payload.problem_type);
 
-          ctx.pushEvent('save_edits', {
-            problem_number: problemNumber,
-            problem_type: problemType,
-            problem_statement: problemStatement,
-            hint: hint,
-            solution: solution
-          });
-
-          // Switch back to view mode
-          const mainSection = ctx.root.querySelector("section");
-          const editSection = ctx.root.querySelector("#edit_section");
-          mainSection.classList.toggle("hidden");
-          editSection.classList.toggle("hidden");
-        });
-      }
+        // Rebind the tab event listeners
+        //updateTabListeners(payload.problem_type);
+      });
     }
-
-
-
-
-
     """
   end
 end
