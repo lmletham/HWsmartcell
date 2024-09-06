@@ -1,5 +1,5 @@
 defmodule Hwsmartcell do
-  use Kino.JS, assets_path: "../../assets"
+  use Kino.JS, assets_path: "lib/assets"
   use Kino.JS.Live
   use Kino.SmartCell, name: "Homework Smartcell"
 
