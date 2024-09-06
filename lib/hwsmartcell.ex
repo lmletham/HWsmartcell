@@ -300,8 +300,4 @@ defmodule Hwsmartcell do
     .highlight .w { color: #e7e9db; } /* Whitespace */
     """
   end
-
-  asset "main.js" do
-    File.read!("assets/main.js")
-  end
 end
