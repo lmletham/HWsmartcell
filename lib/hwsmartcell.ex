@@ -381,20 +381,11 @@ defmodule Hwsmartcell do
         </section>
       `;
 
-      const problemTab = ctx.root.querySelector("#problem_tab");
-      const hintTab = ctx.root.querySelector("#hint_tab");
-      const solutionTab = ctx.root.querySelector("#solution_tab");
-      const content = ctx.root.querySelector("#content");
-      const inputSection = ctx.root.querySelector("#input_section");
-      const feedbackSection = ctx.root.querySelector("#feedback");
-      const editButton = ctx.root.querySelector("#edit_button");
-      const editSection = ctx.root.querySelector("#edit_section");
-      const mainSection = ctx.root.querySelector("section");
 
       const tabs = {
-        "problem_statement": payload.problem_statement,
-        "hint": payload.hint,
-        "solution": payload.solution
+        problem_tab: payload.problem_statement,
+        hint_tab: payload.hint,
+        solution_tab: payload.solution
       };
 
       function displayContent(tab, activeTab) {
