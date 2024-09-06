@@ -152,6 +152,7 @@ defmodule Hwsmartcell do
     # Send the rendered HTML and CSS to the client-side for display
     broadcast_event(ctx, "refresh", %{
       problem_number: problem_number,
+      problem_type: problem_type,
       problem_statement: rendered_problem_statement,
       hint: rendered_hint,
       solution: rendered_solution,
