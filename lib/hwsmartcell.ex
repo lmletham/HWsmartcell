@@ -447,9 +447,6 @@ defmodule Hwsmartcell do
         solutionTab.addEventListener("click", () => displayContent("solution", solutionTab, payload.problem_type));
       }
 
-      // Call this function after `ctx.handleEvent("refresh", ...)` to rebind the event listeners
-      updateTabListeners();
-
       displayContent("problem_statement", problemTab, payload.problem_type); // Show the problem statement by default
 
       // Edit button logic
