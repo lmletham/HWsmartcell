@@ -403,9 +403,6 @@ defmodule Hwsmartcell do
       }
 
 
-
-
-
       function displayContent(tab, activeTab, problem_type) {
         updateTabListeners();
         content.innerHTML = tabs[tab];
@@ -512,7 +509,7 @@ defmodule Hwsmartcell do
         displayContent("problem_statement", problemTab, payload.problem_type);
 
         // Rebind the tab event listeners
-        updateTabListeners();
+        //updateTabListeners();
       });
     }
     """
