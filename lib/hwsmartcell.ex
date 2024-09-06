@@ -497,10 +497,6 @@ defmodule Hwsmartcell do
 
       });
 
-      //Event listeners for tabs
-      document.getElementById('problem_tab').addEventListener('click', () => setActiveTab('problem_tab'));
-      document.getElementById('hint_tab').addEventListener('click', () => setActiveTab('hint_tab'));
-      document.getElementById('solution_tab').addEventListener('click', () => setActiveTab('solution_tab'));
 
       // Handle feedback events
       ctx.handleEvent("feedback", ({ message, color }) => {
@@ -514,8 +510,9 @@ defmodule Hwsmartcell do
         tabs.solution_tab = payload.solution;
         document.getElementById("test_code").value = payload.test_code;
         //displayContent("problem_statement", problemTab); // LML Comment out
-        displayContent('problem_tab'); //LML this one was half working
+        //displayContent('problem_tab'); //LML this one was half working
         //displayContent('problem_statement', problemTab) LML this one regressed, lost highlight.
+        displayContent('problem_tab', document.getElementById('problem_tab')); //LML new try
 
       });
     }
