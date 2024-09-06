@@ -473,30 +473,41 @@ defmodule Hwsmartcell do
           test_code: testCode
         });
 
-        //Highlighting logic - assuming `process_with_makeup` is handled by the backend
+        // Highlighting logic - apply `process_with_makeup` for both types
         ctx.pushEvent('process_with_makeup', { problem_statement: problemStatement }, (highlightedContent) => {
-          // Update the payload and tabs after highlighting is done.
-          payload.problem_number = problemNumber;
-          payload.problem_type = problemType;
-          payload.problem_statement = problemStatement;
-          payload.hint = hint;
-          payload.solution = solution;
-          payload.correct_answer = correctAnswer;
-          payload.test_code = testCode;
+            // Update the payload and tabs after highlighting is done.
+            payload.problem_statement = highlightedContent.problem_statement;
 
-          // Update header and content
-          document.getElementById('header').textContent = `Problem ${problemNumber}`;
-          tabs.problem_statement = problemStatement;
-          tabs.hint = hint;
-          tabs.solution = solution;
+            // Update tabs
+            tabs.problem_statement = highlightedContent.problem_statement;
 
-          // Switch back to view mode
-          mainSection.classList.toggle("hidden");
-          editSection.classList.toggle("hidden");
+            // Refresh the active tab
+            displayContent("problem_statement", problemTab);
+        });
 
-          // Refresh the active tab
-          displayContent("problem_statement", problemTab); //LML comment out
-          });
+
+        // Update the payload and tabs after highlighting is done.
+        payload.problem_number = problemNumber;
+        payload.problem_type = problemType;
+        payload.problem_statement = problemStatement;
+        payload.hint = hint;
+        payload.solution = solution;
+        payload.correct_answer = correctAnswer;
+        payload.test_code = testCode;
+
+        // Update header and content
+        document.getElementById('header').textContent = `Problem ${problemNumber}`;
+        tabs.problem_statement = problemStatement;
+        tabs.hint = hint;
+        tabs.solution = solution;
+
+        // Switch back to view mode
+        mainSection.classList.toggle("hidden");
+        editSection.classList.toggle("hidden");
+
+        // Refresh the active tab
+        //displayContent("problem_statement", problemTab); //LML comment out
+
       });
 
 
