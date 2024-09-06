@@ -395,9 +395,19 @@ defmodule Hwsmartcell do
         "solution": payload.solution
       };
 
+      //Tab Event Listeners
+      function updateTabListeners() {
+        problemTab.addEventListener("click", () => displayContent("problem_statement", problemTab, payload.problem_type));
+        hintTab.addEventListener("click", () => displayContent("hint", hintTab, payload.problem_type));
+        solutionTab.addEventListener("click", () => displayContent("solution", solutionTab, payload.problem_type));
+      }
+
+
+
 
 
       function displayContent(tab, activeTab, problem_type) {
+        updateTabListeners();
         content.innerHTML = tabs[tab];
 
         // Update active class
@@ -440,12 +450,7 @@ defmodule Hwsmartcell do
         }
       }
 
-      //Tab Event Listeners
-      function updateTabListeners() {
-        problemTab.addEventListener("click", () => displayContent("problem_statement", problemTab, payload.problem_type));
-        hintTab.addEventListener("click", () => displayContent("hint", hintTab, payload.problem_type));
-        solutionTab.addEventListener("click", () => displayContent("solution", solutionTab, payload.problem_type));
-      }
+
 
       displayContent("problem_statement", problemTab, payload.problem_type); // Show the problem statement by default
 
