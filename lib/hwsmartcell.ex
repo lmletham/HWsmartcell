@@ -440,13 +440,12 @@ defmodule Hwsmartcell do
         }
       }
 
-
-      //Event listeners for tabs
-      problemTab.addEventListener("click", () => displayContent('problem_tab');
+      // Tab event listeners
+      problemTab.addEventListener("click", () => displayContent('problem_tab'));
       hintTab.addEventListener("click", () => displayContent("hint", hintTab));
       solutionTab.addEventListener("click", () => displayContent("solution", solutionTab));
 
-      displayContent('problem_tab'); // Show the problem statement by default
+      displayContent("problem_statement", problemTab); // Show the problem statement by default
 
       // Edit button logic
       editButton.addEventListener("click", () => {
@@ -494,7 +493,7 @@ defmodule Hwsmartcell do
         editSection.classList.toggle("hidden");
 
         // Refresh the active tab
-        //displayContent('problem_statement', problemTab);
+        //displayContent('problem_statement', problemTab); //LML commenting out to test
         displayContent('problem_tab'); //LML to match the one below
 
       });
@@ -513,7 +512,7 @@ defmodule Hwsmartcell do
         document.getElementById("test_code").value = payload.test_code;
         //displayContent("problem_statement", problemTab); // LML Comment out
         displayContent('problem_tab'); //LML this one was half working
-        //displayContent('problem_statement', problemTab) // LML this one regressed, lost highlight.
+        //displayContent('problem_statement', problemTab) LML this one regressed, lost highlight.
         //displayContent('problem_tab', document.getElementById('problem_tab')); //LML new try
 
       });
