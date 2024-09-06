@@ -487,16 +487,15 @@ defmodule Hwsmartcell do
             // Switch back to view mode
             mainSection.classList.toggle("hidden");
             editSection.classList.toggle("hidden");
+
+            // Update the payload and tabs after highlighting is done.
+            payload.problem_number = problemNumber;
+            payload.problem_type = problemType;
+            payload.hint = hint;
+            payload.solution = solution;
+            payload.correct_answer = correctAnswer;
+            payload.test_code = testCode;
         });
-
-
-        // Update the payload and tabs after highlighting is done.
-        payload.problem_number = problemNumber;
-        payload.problem_type = problemType;
-        payload.hint = hint;
-        payload.solution = solution;
-        payload.correct_answer = correctAnswer;
-        payload.test_code = testCode;
       });
 
 
