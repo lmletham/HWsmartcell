@@ -392,9 +392,9 @@ defmodule Hwsmartcell do
         content.innerHTML = tabs[tab];
 
         // Update active class
-        document.querySelectorAll(".tab_button").forEach(btn => {
-          btn.classList.remove("text-blue-500", "font-bold", "border-b-2", "border-blue-500");
-          btn.classList.add("text-gray-500");
+        document.querySelectorAll('.tab_button').forEach(button => {
+          button.classList.remove('text-blue-500', 'font-bold', 'border-b-2', 'border-blue-500');
+          button.classList.add('text-gray-500');
         });
         activeTab.classList.add("text-blue-500", "font-bold", "border-b-2", "border-blue-500");
         activeTab.classList.remove("text-gray-500");
