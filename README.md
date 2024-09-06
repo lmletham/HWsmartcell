@@ -16,4 +16,4 @@ I only need to have the above in the startup cell because all my dependencies ar
 
 
 # Code Notes
-OK. I fixed the input box showing up on hint and solution tabs. Now I just need to make it hide on "elixir"
+working: fixed blue line issue. Broken: tab switch resets highlight
