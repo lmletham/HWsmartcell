@@ -410,34 +410,30 @@ defmodule Hwsmartcell do
         activeTab.classList.remove("text-gray-500");
 
         // Display input only on the Problem Statement tab
-        if (tab === "problem_statement") {
-          if (payload.show_input_box === "text") {
-            inputSection.innerHTML = `
-              <input type="text" id="text_input" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Type your answer here...">
-              <button id="submit_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Submit</button>
-            `;
+        if (tab === "problem_statement" && payload.show_input_box) {  // Check show_input_box as a boolean
+          inputSection.innerHTML = `
+            <input type="text" id="text_input" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Type your answer here...">
+            <button id="submit_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Submit</button>
+          `;
 
-            const textInput = document.getElementById('text_input');
-            const submitButton = document.getElementById('submit_button');
+          const textInput = document.getElementById('text_input');
+          const submitButton = document.getElementById('submit_button');
 
-            // Event listener for the submit button
-            submitButton.addEventListener("click", () => {
-              const inputValue = textInput.value;
-              ctx.pushEvent("check_answer", { input_value: inputValue });
-            });
+          // Event listener for the submit button
+          submitButton.addEventListener("click", () => {
+            const inputValue = textInput.value;
+            ctx.pushEvent("check_answer", { input_value: inputValue });
+          });
 
-            // Event listener for the "Enter" key press
-            textInput.addEventListener("keydown", (event) => {
-              if (event.key === "Enter") {
-                event.preventDefault(); // Prevent form submission or other default behavior
-                submitButton.click(); // Trigger the submit button click
-              }
-            });
-          } else if (payload.show_input_box === "elixir") {
-            inputSection.innerHTML = ""; // Display nothing if problem_type is "elixir"
-          }
+          // Event listener for the "Enter" key press
+          textInput.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+              event.preventDefault(); // Prevent form submission or other default behavior
+              submitButton.click(); // Trigger the submit button click
+            }
+          });
         } else {
-          inputSection.innerHTML = ""; // Clear the input section on other tabs
+          inputSection.innerHTML = "";  // Clear the input section if show_input_box is false
         }
       }
 
