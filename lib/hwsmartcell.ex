@@ -453,8 +453,7 @@ defmodule Hwsmartcell do
       });
 
       // Save button logic
-      const saveButton = ctx.root.querySelector("#save_button");
-      saveButton.addEventListener("click", () => {
+      document.getElementById('save_button').addEventListener('click', () => {
         const problemNumber = document.getElementById('problem_number').value;
         const problemType = document.getElementById('problem_type').value;
         const problemStatement = document.getElementById('problem_statement').value;
@@ -493,7 +492,7 @@ defmodule Hwsmartcell do
         editSection.classList.toggle("hidden");
 
         // Refresh the active tab
-        // displayContent('problem_statement', problemTab); //LML Commented out
+        displayContent('problem_statement', problemTab);
       });
 
       ctx.handleEvent("feedback", ({ message, color }) => {
