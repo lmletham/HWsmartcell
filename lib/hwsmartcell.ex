@@ -444,7 +444,8 @@ defmodule Hwsmartcell do
       hintTab.addEventListener("click", () => displayContent("hint", hintTab));
       solutionTab.addEventListener("click", () => displayContent("solution", solutionTab));
 
-      displayContent("problem_statement", problemTab); // Show the problem statement by default
+      // displayContent("problem_statement", problemTab); // LML Show the problem statement by default
+      displayContent("problem_statement", document.getElementById('problem_tab'));
 
       // Edit button logic
       editButton.addEventListener("click", () => {
@@ -473,13 +474,13 @@ defmodule Hwsmartcell do
         });
 
         // Update the payload and tabs
-        //payload.problem_number = problemNumber; //try to comment these out
-        //payload.problem_type = problemType;
-        //payload.problem_statement = problemStatement;
-        //payload.hint = hint;
-        //payload.solution = solution;
-        //payload.correct_answer = correctAnswer;
-        //payload.test_code = testCode;
+        payload.problem_number = problemNumber;
+        payload.problem_type = problemType;
+        payload.problem_statement = problemStatement;
+        payload.hint = hint;
+        payload.solution = solution;
+        payload.correct_answer = correctAnswer;
+        payload.test_code = testCode;
 
         // Update header and content
         document.getElementById('header').textContent = `Problem ${problemNumber}`;
