@@ -304,8 +304,32 @@ defmodule Hwsmartcell do
   asset "main.js" do
     """
     export function init(ctx, payload) {
+      // Include Tailwind CSS
+      const tailwindLink = document.createElement("link");
+      tailwindLink.rel = "stylesheet";
+      tailwindLink.href = "https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css";
+      document.head.appendChild(tailwindLink);
+
+      // Include Makeup CSS from the payload
+      const makeupStyle = document.createElement("style");
+      makeupStyle.textContent = payload.makeup_css || '';
+      document.head.appendChild(makeupStyle);
+
       // Set up the initial layout
       ctx.root.innerHTML = `
+        <style>
+          pill {
+            display: inline-block;
+            padding: 0.1rem 0.5rem;
+            border-radius: 0.5rem;
+            background-color: #e2e8f0;
+            color: #000000;
+            font-size: 1rem;
+            line-height: 1.25rem;
+            font-family: JetBrains Mono, monospace;
+          }
+        </style>
+
         <section class="bg-gray-100 p-4 rounded-md relative">
           <button id="edit_button" class="absolute top-2 right-2 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">Edit</button>
           <h2 id="header" class="text-2xl font-bold mb-4">Problem ${payload.problem_number}</h2>
@@ -316,17 +340,46 @@ defmodule Hwsmartcell do
           </div>
           <div id="content" class="mt-4 p-4 bg-white rounded-md shadow-md"></div>
           <div id="input_section" class="mt-4"></div>
+          <div id="feedback" class="mt-4 font-bold"></div>
+        </section>
+
+        <section id="edit_section" class="bg-white p-4 rounded-md hidden">
+          <h2 class="text-xl font-bold mb-4">Edit Problem</h2>
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="problem_number">Problem Number</label>
+            <input type="text" id="problem_number" class="w-full p-2 border border-gray-300 rounded-md" value="${payload.problem_number}">
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="problem_type">Problem Type</label>
+            <select id="problem_type" class="w-full p-2 border border-gray-300 rounded-md">
+              <option value="text" ${payload.problem_type === 'text' ? 'selected' : ''}>Text</option>
+              <option value="elixir" ${payload.problem_type === 'elixir' ? 'selected' : ''}>Elixir</option>
+            </select>
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="problem_statement">Problem Statement</label>
+            <textarea id="problem_statement" rows="6" class="w-full p-2 border border-gray-300 rounded-md">${payload.problem_statement}</textarea>
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="hint">Hint</label>
+            <textarea id="hint" rows="4" class="w-full p-2 border border-gray-300 rounded-md">${payload.hint}</textarea>
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="solution">Solution</label>
+            <textarea id="solution" rows="4" class="w-full p-2 border border-gray-300 rounded-md">${payload.solution}</textarea>
+          </div>
+          <button id="save_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Save</button>
         </section>
       `;
 
-      // Initial call to render the default content (problem_statement tab)
+      // Initial call to render the default content
       displayContent("problem_statement", ctx.root.querySelector("#problem_tab"), payload.problem_type, ctx, {
         "problem_statement": payload.problem_statement,
         "hint": payload.hint,
         "solution": payload.solution
       });
 
-      // Set up event listeners for switching tabs (handled once)
+      // Set up the tab listeners only once
       ctx.root.querySelector("#problem_tab").addEventListener("click", () => {
         displayContent("problem_statement", ctx.root.querySelector("#problem_tab"), payload.problem_type, ctx, {
           "problem_statement": payload.problem_statement,
@@ -353,20 +406,26 @@ defmodule Hwsmartcell do
 
       // Handle server-side refresh event (called once)
       ctx.handleEvent("refresh", (newPayload) => {
-        // Update the content with the new payload when the refresh event is received
         displayContent("problem_statement", ctx.root.querySelector("#problem_tab"), newPayload.problem_type, ctx, {
           "problem_statement": newPayload.problem_statement,
           "hint": newPayload.hint,
           "solution": newPayload.solution
         });
 
-        // Optionally, update the header if necessary
+        // Update the header
         document.getElementById('header').textContent = `Problem ${newPayload.problem_number}`;
       });
+
+      // Edit button toggling view mode
+      const editButton = ctx.root.querySelector("#edit_button");
+      const mainSection = ctx.root.querySelector("section");
+      const editSection = ctx.root.querySelector("#edit_section");
+
+      editButton.addEventListener("click", () => {
+        mainSection.classList.toggle("hidden");
+        editSection.classList.toggle("hidden");
+      });
     }
-
-
-
 
     function displayContent(tab, activeTab, problem_type, ctx, tabs) {
       const content = ctx.root.querySelector("#content");
@@ -393,23 +452,51 @@ defmodule Hwsmartcell do
         const textInput = document.getElementById('text_input');
         const submitButton = document.getElementById('submit_button');
 
-        // Event listener for the submit button
+        // Event listener for submit button
         submitButton.addEventListener("click", () => {
           const inputValue = textInput.value;
           ctx.pushEvent("check_answer", { input_value: inputValue });
         });
 
-        // Optional: Handle "Enter" key press
+        // Handle "Enter" key press
         textInput.addEventListener("keydown", (event) => {
           if (event.key === "Enter") {
             event.preventDefault();
-            submitButton.click(); // Trigger the submit button click
+            submitButton.click();
           }
         });
       } else {
-        inputSection.innerHTML = ""; // Clear input section if it's not the problem statement tab
+        inputSection.innerHTML = ""; // Clear input section if it's not the problem statement
+      }
+
+      // Save button logic (inside displayContent)
+      const saveButton = document.getElementById('save_button');
+      if (saveButton) {
+        saveButton.addEventListener('click', () => {
+          const problemNumber = document.getElementById('problem_number').value;
+          const problemType = document.getElementById('problem_type').value;
+          const problemStatement = document.getElementById('problem_statement').value;
+          const hint = document.getElementById('hint').value;
+          const solution = document.getElementById('solution').value;
+
+          ctx.pushEvent('save_edits', {
+            problem_number: problemNumber,
+            problem_type: problemType,
+            problem_statement: problemStatement,
+            hint: hint,
+            solution: solution
+          });
+
+          // Switch back to view mode
+          const mainSection = ctx.root.querySelector("section");
+          const editSection = ctx.root.querySelector("#edit_section");
+          mainSection.classList.toggle("hidden");
+          editSection.classList.toggle("hidden");
+        });
       }
     }
+
+
 
 
 
