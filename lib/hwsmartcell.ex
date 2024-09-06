@@ -405,7 +405,7 @@ defmodule Hwsmartcell do
         "solution": payload.solution
       };
 
-      function displayContent(tab, activeTab) {
+      function displayContent(tab, activeTab, show_input_box) {
         content.innerHTML = tabs[tab];
 
         // Update active class
@@ -515,7 +515,7 @@ defmodule Hwsmartcell do
         tabs["solution"] = payload.solution;
 
         // Re-display the current tab content
-        displayContent("problem_statement", problemTab);
+        displayContent("problem_statement", problemTab, payload.show_input_box);
       });
     }
     """
