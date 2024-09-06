@@ -405,7 +405,7 @@ defmodule Hwsmartcell do
       updateTabListeners(payload.problem_type);
 
 
-      function displayContent(tab, activeTab, problem_type) {
+      function displayContent(tab, activeTab, payload.problem_type) {
         content.innerHTML = tabs[tab];
 
         // Update active class
