@@ -481,10 +481,8 @@ defmodule Hwsmartcell do
           test_code: testCode
         });
 
-        // Switch back to view mode
-        mainSection.classList.toggle("hidden");
-        editSection.classList.toggle("hidden");
-      });
+
+
 
       // Handle feedback events
       ctx.handleEvent("feedback", ({ message, color }) => {
@@ -498,6 +496,7 @@ defmodule Hwsmartcell do
         payload.problem_type = payload.problem_type;
         payload.correct_answer = payload.correct_answer;
         payload.test_code = payload.test_code;
+        payload.show_input_box = payload.show_input_box;
 
         // Update the header
         document.getElementById('header').textContent = `Problem ${payload.problem_number}`;
@@ -509,6 +508,12 @@ defmodule Hwsmartcell do
 
         // Re-display the current tab content
         displayContent("problem_statement", problemTab);
+
+
+        // Switch back to view mode
+        mainSection.classList.toggle("hidden");
+        editSection.classList.toggle("hidden");
+
       });
     }
     """
