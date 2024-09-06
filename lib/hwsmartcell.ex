@@ -125,15 +125,22 @@ defmodule Hwsmartcell do
     "hint" => hint,
     "solution" => solution,
     "correct_answer" => correct_answer,
-    "test_code" => test_code
+    "test_code" => test_code,
+    "problem_type" => problem_type
   }, ctx) do
+
+    #recalculate show_input_box based on teh updated problem_type
+    show_input_box = problem_type == "text"
+
+
     ctx = assign(ctx,
     problem_number: problem_number,
     problem_statement: problem_statement,
     hint: hint,
     solution: solution,
     correct_answer: correct_answer,
-    test_code: test_code
+    test_code: test_code,
+    show_input_box: show_input_box
   )
 
     # Process the text with Makeup
