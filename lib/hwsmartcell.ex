@@ -27,7 +27,6 @@ defmodule Hwsmartcell do
     solution = attrs["solution"] || "Atom"
     correct_answer = attrs["correct_answer"] || ""
     test_code = attrs["test_code"] || ""
-    show_input_box = problem_type == "text"
 
     # Process the problem statement with Makeup
     rendered_problem_statement = process_with_makeup(problem_statement)
@@ -45,8 +44,7 @@ defmodule Hwsmartcell do
      solution: rendered_solution,
      correct_answer: correct_answer,
      test_code: test_code,
-     makeup_css: makeup_css,
-     show_input_box: show_input_box
+     makeup_css: makeup_css
     )
 
     {:ok, ctx}
@@ -61,8 +59,7 @@ defmodule Hwsmartcell do
       hint: ctx.assigns.hint,
       solution: ctx.assigns.solution,
       correct_answer: ctx.assigns.correct_answer,
-      makeup_css: ctx.assigns.makeup_css,
-      show_input_box: ctx.assigns.show_input_box
+      makeup_css: ctx.assigns.makeup_css
     }, ctx}
   end
 
@@ -75,8 +72,7 @@ defmodule Hwsmartcell do
       "hint" => ctx.assigns.hint,
       "solution" => ctx.assigns.solution,
       "correct_answer" => ctx.assigns.correct_answer,
-      "test_code" => ctx.assigns.test_code,
-      "show_input_box" => ctx.assigns.show_input_box
+      "test_code" => ctx.assigns.test_code
     }
   end
 
@@ -120,28 +116,21 @@ defmodule Hwsmartcell do
   @impl true
   def handle_event("save_edits", %{
     "problem_number" => problem_number,
+    "problem_type" => problem_type,
     "problem_statement" => problem_statement,
     "hint" => hint,
     "solution" => solution,
     "correct_answer" => correct_answer,
-    "test_code" => test_code,
-    "problem_type" => problem_type,
-    #"show_input_box" => show_input_box
+    "test_code" => test_code
   }, ctx) do
-
-    #recalculate show_input_box based on teh updated problem_type
-    show_input_box = problem_type == "text" #boolean
-
-
     ctx = assign(ctx,
     problem_number: problem_number,
-    problem_statement: problem_statement,
     problem_type: problem_type,
+    problem_statement: problem_statement,
     hint: hint,
     solution: solution,
     correct_answer: correct_answer,
-    test_code: test_code,
-    show_input_box: show_input_box
+    test_code: test_code
   )
 
     # Process the text with Makeup
@@ -159,8 +148,7 @@ defmodule Hwsmartcell do
       solution: rendered_solution,
       correct_answer: correct_answer,
       test_code: test_code,
-      makeup_css: ctx.assigns.makeup_css,
-      show_input_box: show_input_box
+      makeup_css: ctx.assigns.makeup_css
     })
 
     {:noreply, ctx}
@@ -409,7 +397,7 @@ defmodule Hwsmartcell do
 
 
 
-      function displayContent(tab, activeTab, show_input_box) {
+      function displayContent(tab, activeTab, problem_type) {
         content.innerHTML = tabs[tab];
 
         // Update active class
@@ -422,7 +410,7 @@ defmodule Hwsmartcell do
 
         // Display input only on the Problem Statement tab
         if (tab === "problem_statement") {
-          if (show_input_box === true) {
+          if (problem_type === "text") {
             inputSection.innerHTML = `
               <input type="text" id="text_input" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Type your answer here...">
               <button id="submit_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Submit</button>
@@ -444,7 +432,7 @@ defmodule Hwsmartcell do
                 submitButton.click(); // Trigger the submit button click
               }
             });
-          } else if (show_input_box === false) {
+          } else {
             inputSection.innerHTML = ""; // Display nothing if problem_type is "elixir"
           }
         } else {
@@ -453,20 +441,15 @@ defmodule Hwsmartcell do
       }
 
       function updateTabListeners() {
-        problemTab.addEventListener("click", () => displayContent("problem_statement", problemTab, payload.show_input_box));
-        hintTab.addEventListener("click", () => displayContent("hint", hintTab, payload.show_input_box));
-        solutionTab.addEventListener("click", () => displayContent("solution", solutionTab, payload.show_input_box));
+        problemTab.addEventListener("click", () => displayContent("problem_statement", problemTab, payload.problem_type));
+        hintTab.addEventListener("click", () => displayContent("hint", hintTab, payload.problem_type));
+        solutionTab.addEventListener("click", () => displayContent("solution", solutionTab, payload.problem_type));
       }
 
-      // Call this function after `ctx.handleEvent("refresh", ...)` to rebind the event listeners with the updated `show_input_box`
+      // Call this function after `ctx.handleEvent("refresh", ...)` to rebind the event listeners
       updateTabListeners();
 
-
-
-
-
-
-      displayContent("problem_statement", problemTab, payload.show_input_box); // Show the problem statement by default
+      displayContent("problem_statement", problemTab, payload.problem_type); // Show the problem statement by default
 
       // Edit button logic
       editButton.addEventListener("click", () => {
@@ -493,7 +476,6 @@ defmodule Hwsmartcell do
           solution: solution,
           correct_answer: correctAnswer,
           test_code: testCode,
-          show_input_box: showInputBox
         });
 
         // Switch back to view mode
@@ -524,9 +506,9 @@ defmodule Hwsmartcell do
         tabs["solution"] = payload.solution;
 
         // Re-display the current tab content
-        displayContent("problem_statement", problemTab, payload.show_input_box);
+        displayContent("problem_statement", problemTab, payload.problem_type);
 
-        // Rebind the tab event listeners with updated show_input_box
+        // Rebind the tab event listeners
         updateTabListeners();
       });
     }
