@@ -402,7 +402,7 @@ defmodule Hwsmartcell do
         // Display input only on the Problem Statement tab
         if (tab === "problem_statement") {
           if (payload.problem_type === "text") {
-            inputSection.innerHTML = `
+            document.getElementById('input_section').innerHTML = `
               <input type="text" id="text_input" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Type your answer here...">
               <button id="submit_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Submit</button>
             `;
@@ -424,10 +424,10 @@ defmodule Hwsmartcell do
               }
             });
           } else if (payload.problem_type === "elixir") {
-            inputSection.innerHTML = ""; // Display nothing if problem_type is "elixir"
+            document.getElementById('input_section').innerHTML = ""; // Display nothing if problem_type is "elixir"
           }
         } else {
-          inputSection.innerHTML = ""; // Clear the input section on other tabs
+          document.getElementById('input_section').innerHTML = ""; // Clear the input section on other tabs
         }
       }
 
