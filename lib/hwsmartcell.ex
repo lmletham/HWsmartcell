@@ -418,7 +418,7 @@ defmodule Hwsmartcell do
 
         // Display input only on the Problem Statement tab
         if (tab === "problem_statement") {
-          if (payload.show_input_box) {
+          if (show_input_box === true) {
             inputSection.innerHTML = `
               <input type="text" id="text_input" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Type your answer here...">
               <button id="submit_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Submit</button>
@@ -440,7 +440,7 @@ defmodule Hwsmartcell do
                 submitButton.click(); // Trigger the submit button click
               }
             });
-          } else if (payload.show_input_box === false) {
+          } else if (show_input_box === false) {
             inputSection.innerHTML = ""; // Display nothing if problem_type is "elixir"
           }
         } else {
@@ -449,11 +449,11 @@ defmodule Hwsmartcell do
       }
 
       // Tab event listeners
-      problemTab.addEventListener("click", () => displayContent("problem_statement", problemTab));
-      hintTab.addEventListener("click", () => displayContent("hint", hintTab));
-      solutionTab.addEventListener("click", () => displayContent("solution", solutionTab));
+      problemTab.addEventListener("click", () => displayContent("problem_statement", problemTab, payload.show_input_box));
+      hintTab.addEventListener("click", () => displayContent("hint", hintTab, payload.show_input_box));
+      solutionTab.addEventListener("click", () => displayContent("solution", solutionTab, payload.show_input_box));
 
-      displayContent("problem_statement", problemTab); // Show the problem statement by default
+      displayContent("problem_statement", problemTab, payload.show_input_box); // Show the problem statement by default
 
       // Edit button logic
       editButton.addEventListener("click", () => {
