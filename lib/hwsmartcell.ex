@@ -317,19 +317,6 @@ defmodule Hwsmartcell do
 
       // Initialize the UI
       ctx.root.innerHTML = `
-        <style>
-          pill {
-            display: inline-block;
-            padding: 0.1rem 0.5rem;
-            border-radius: 0.5rem;
-            background-color: #e2e8f0;
-            color: #000000;
-            font-size: 1rem;
-            line-height: 1.25rem;
-            font-family: JetBrains Mono, monospace;
-          }
-        </style>
-
         <section class="bg-gray-100 p-4 rounded-md relative">
           <button id="edit_button" class="absolute top-2 right-2 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">Edit</button>
           <h2 id="header" class="text-2xl font-bold mb-4">Problem ${payload.problem_number}</h2>
@@ -349,44 +336,90 @@ defmodule Hwsmartcell do
         </section>
       `;
 
+      // Store the latest problem statement, hint, and solution in a separate object
+      let tabs = {
+        "problem_statement": payload.problem_statement,
+        "hint": payload.hint,
+        "solution": payload.solution
+      };
+
       // Set up the tab listeners only once
       function updateTabListeners(problem_type) {
         const problemTab = ctx.root.querySelector("#problem_tab");
         const hintTab = ctx.root.querySelector("#hint_tab");
         const solutionTab = ctx.root.querySelector("#solution_tab");
 
-        problemTab.addEventListener("click", () => displayContent("problem_statement", problemTab, problem_type, ctx));
-        hintTab.addEventListener("click", () => displayContent("hint", hintTab, problem_type, ctx));
-        solutionTab.addEventListener("click", () => displayContent("solution", solutionTab, problem_type, ctx));
+        problemTab.addEventListener("click", () => displayContent("problem_statement", problemTab, problem_type, ctx, tabs));
+        hintTab.addEventListener("click", () => displayContent("hint", hintTab, problem_type, ctx, tabs));
+        solutionTab.addEventListener("click", () => displayContent("solution", solutionTab, problem_type, ctx, tabs));
       }
 
       updateTabListeners(payload.problem_type);
 
       // Display default tab content
-      displayContent("problem_statement", ctx.root.querySelector("#problem_tab"), payload.problem_type, ctx);
+      displayContent("problem_statement", ctx.root.querySelector("#problem_tab"), payload.problem_type, ctx, tabs);
 
-      // Edit and Save button logic
-      // ... (rest of the code remains unchanged)
-
+      // Handle the 'refresh' event
       ctx.handleEvent("refresh", (payload) => {
         // Update the header
         document.getElementById('header').textContent = `Problem ${payload.problem_number}`;
 
+        // Update the tabs object with new data
+        tabs = {
+          "problem_statement": payload.problem_statement,
+          "hint": payload.hint,
+          "solution": payload.solution
+        };
+
         // Re-display the current tab content with updated data
-        displayContent("problem_statement", ctx.root.querySelector("#problem_tab"), payload.problem_type, ctx);
+        displayContent("problem_statement", ctx.root.querySelector("#problem_tab"), payload.problem_type, ctx, tabs);
+      });
+
+      // Edit and save button logic
+      const editButton = ctx.root.querySelector("#edit_button");
+      const mainSection = ctx.root.querySelector("section");
+      const editSection = ctx.root.querySelector("#edit_section");
+
+      editButton.addEventListener("click", () => {
+        mainSection.classList.toggle("hidden");
+        editSection.classList.toggle("hidden");
+      });
+
+      document.getElementById('save_button').addEventListener('click', () => {
+        const problemNumber = document.getElementById('problem_number').value;
+        const problemType = document.getElementById('problem_type').value;
+        const problemStatement = document.getElementById('problem_statement').value;
+        const hint = document.getElementById('hint').value;
+        const solution = document.getElementById('solution').value;
+        const correctAnswer = document.getElementById('correct_answer').value;
+        const testCode = document.getElementById('test_code').value;
+
+        // Update the tabs object with the saved data
+        tabs = {
+          "problem_statement": problemStatement,
+          "hint": hint,
+          "solution": solution
+        };
+
+        ctx.pushEvent('save_edits', {
+          problem_number: problemNumber,
+          problem_type: problemType,
+          problem_statement: problemStatement,
+          hint: hint,
+          solution: solution,
+          correct_answer: correctAnswer,
+          test_code: testCode,
+        });
+
+        // Switch back to view mode
+        mainSection.classList.toggle("hidden");
+        editSection.classList.toggle("hidden");
       });
     }
 
-    function displayContent(tab, activeTab, problem_type, ctx) {
+    function displayContent(tab, activeTab, problem_type, ctx, tabs) {
       const content = ctx.root.querySelector("#content");
       const inputSection = ctx.root.querySelector("#input_section");
-
-      // Dynamically create the tabs object based on the most recent state
-      const tabs = {
-        "problem_statement": ctx.root.querySelector("#problem_statement").value || "",
-        "hint": ctx.root.querySelector("#hint").value || "",
-        "solution": ctx.root.querySelector("#solution").value || ""
-      };
 
       // Render the content for the active tab
       content.innerHTML = tabs[tab];
@@ -426,6 +459,7 @@ defmodule Hwsmartcell do
         inputSection.innerHTML = ""; // Clear input section if it's not the problem statement
       }
     }
+
 
     """
   end
