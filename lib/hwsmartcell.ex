@@ -473,13 +473,13 @@ defmodule Hwsmartcell do
         });
 
         // Update the payload and tabs
-        payload.problem_number = problemNumber;
-        payload.problem_type = problemType;
-        payload.problem_statement = problemStatement;
-        payload.hint = hint;
-        payload.solution = solution;
-        payload.correct_answer = correctAnswer;
-        payload.test_code = testCode;
+        //payload.problem_number = problemNumber; //try to comment these out
+        //payload.problem_type = problemType;
+        //payload.problem_statement = problemStatement;
+        //payload.hint = hint;
+        //payload.solution = solution;
+        //payload.correct_answer = correctAnswer;
+        //payload.test_code = testCode;
 
         // Update header and content
         document.getElementById('header').textContent = `Problem ${problemNumber}`;
