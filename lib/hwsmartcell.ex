@@ -130,7 +130,7 @@ defmodule Hwsmartcell do
   }, ctx) do
 
     #recalculate show_input_box based on teh updated problem_type
-    show_input_box = problem_type == "text"
+    show_input_box = problem_type == "text" #boolean
 
 
     ctx = assign(ctx,
@@ -158,7 +158,7 @@ defmodule Hwsmartcell do
       correct_answer: correct_answer,
       test_code: test_code,
       makeup_css: ctx.assigns.makeup_css,
-      show_input_box: ctx.assigns.show_input_box
+      show_input_box: show_input_box
     })
 
     {:noreply, ctx}
@@ -418,7 +418,7 @@ defmodule Hwsmartcell do
 
         // Display input only on the Problem Statement tab
         if (tab === "problem_statement") {
-          if (payload.show_input_box === true) {
+          if (show_input_box) {
             inputSection.innerHTML = `
               <input type="text" id="text_input" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Type your answer here...">
               <button id="submit_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Submit</button>
@@ -440,7 +440,7 @@ defmodule Hwsmartcell do
                 submitButton.click(); // Trigger the submit button click
               }
             });
-          } else if (payload.show_input_box === false) {
+          } else if (show_input_box === false) {
             inputSection.innerHTML = ""; // Display nothing if problem_type is "elixir"
           }
         } else {
