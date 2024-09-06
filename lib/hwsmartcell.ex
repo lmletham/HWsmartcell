@@ -493,7 +493,7 @@ defmodule Hwsmartcell do
         editSection.classList.toggle("hidden");
 
         // Refresh the active tab
-        displayContent("problem_statement", problemTab);
+        //displayContent("problem_statement", problemTab); //LML comment out
 
       });
 
