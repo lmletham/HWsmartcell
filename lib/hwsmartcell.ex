@@ -410,7 +410,7 @@ defmodule Hwsmartcell do
 
         // Display input only on the Problem Statement tab
         if (tab === "problem_statement") {
-          if (payload.problem_type === "text") {
+          if (payload.show_input_box === "text") {
             inputSection.innerHTML = `
               <input type="text" id="text_input" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Type your answer here...">
               <button id="submit_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Submit</button>
@@ -432,7 +432,7 @@ defmodule Hwsmartcell do
                 submitButton.click(); // Trigger the submit button click
               }
             });
-          } else if (payload.problem_type === "elixir") {
+          } else if (payload.show_input_box === "elixir") {
             inputSection.innerHTML = ""; // Display nothing if problem_type is "elixir"
           }
         } else {
@@ -500,8 +500,6 @@ defmodule Hwsmartcell do
         tabs["solution"] = payload.solution;
 
         // Re-display the current tab content
-        // Assuming 'currentTab' keeps track of the current tab
-        // If not, you can default to "problem_statement"
         displayContent("problem_statement", problemTab);
       });
     }
