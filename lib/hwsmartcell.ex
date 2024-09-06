@@ -417,7 +417,7 @@ defmodule Hwsmartcell do
         activeTab.classList.remove("text-gray-500");
 
         // Display input only on the Problem Statement tab
-        if (tab === "problem_statement" && problem_type ==="text") {
+        if (tab === "problem_statement" && arg ==="text") {
           inputSection.innerHTML = `
             <input type="text" id="text_input" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Type your answer here...">
             <button id="submit_button" class="mt-2 p-2 bg-blue-500 text-white rounded-md">Submit</button>
