@@ -126,11 +126,11 @@ defmodule Hwsmartcell do
     "correct_answer" => correct_answer,
     "test_code" => test_code,
     "problem_type" => problem_type,
-    "show_input_box" => show_input_box
+    #"show_input_box" => show_input_box
   }, ctx) do
 
     #recalculate show_input_box based on teh updated problem_type
-    #show_input_box = problem_type == "text" #boolean
+    show_input_box = problem_type == "text" #boolean
 
 
     ctx = assign(ctx,
@@ -493,6 +493,7 @@ defmodule Hwsmartcell do
           solution: solution,
           correct_answer: correctAnswer,
           test_code: testCode,
+          show_input_box: showInputBox
         });
 
         // Switch back to view mode
