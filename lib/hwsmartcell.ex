@@ -441,14 +441,14 @@ defmodule Hwsmartcell do
       }
 
       //Tab Event Listeners
-      function updateTabListeners(payload.problem_type) {
+      function updateTabListeners() {
         problemTab.addEventListener("click", () => displayContent("problem_statement", problemTab, payload.problem_type));
         hintTab.addEventListener("click", () => displayContent("hint", hintTab, payload.problem_type));
         solutionTab.addEventListener("click", () => displayContent("solution", solutionTab, payload.problem_type));
       }
 
       // Call this function after `ctx.handleEvent("refresh", ...)` to rebind the event listeners
-      updateTabListeners(payload.problem_type);
+      updateTabListeners();
 
       displayContent("problem_statement", problemTab, payload.problem_type); // Show the problem statement by default
 
@@ -510,7 +510,7 @@ defmodule Hwsmartcell do
         displayContent("problem_statement", problemTab, payload.problem_type);
 
         // Rebind the tab event listeners
-        updateTabListeners(payload.problem_type);
+        updateTabListeners();
       });
     }
     """
