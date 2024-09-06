@@ -16,4 +16,4 @@ I only need to have the above in the startup cell because all my dependencies ar
 
 
 # Code Notes
-working: everything, except tab cycling causes input box to reappear.
+reverting
