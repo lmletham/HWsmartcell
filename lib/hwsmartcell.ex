@@ -349,9 +349,24 @@ defmodule Hwsmartcell do
         const hintTab = ctx.root.querySelector("#hint_tab");
         const solutionTab = ctx.root.querySelector("#solution_tab");
 
-        problemTab.addEventListener("click", () => displayContent("problem_statement", problemTab, problem_type, ctx, tabs));
-        hintTab.addEventListener("click", () => displayContent("hint", hintTab, problem_type, ctx, tabs));
-        solutionTab.addEventListener("click", () => displayContent("solution", solutionTab, problem_type, ctx, tabs));
+        // Check if the elements exist before attaching event listeners
+        if (problemTab) {
+          problemTab.addEventListener("click", () => displayContent("problem_statement", problemTab, problem_type, ctx, tabs));
+        } else {
+          console.error("Problem tab not found");
+        }
+
+        if (hintTab) {
+          hintTab.addEventListener("click", () => displayContent("hint", hintTab, problem_type, ctx, tabs));
+        } else {
+          console.error("Hint tab not found");
+        }
+
+        if (solutionTab) {
+          solutionTab.addEventListener("click", () => displayContent("solution", solutionTab, problem_type, ctx, tabs));
+        } else {
+          console.error("Solution tab not found");
+        }
       }
 
       updateTabListeners(payload.problem_type);
@@ -380,41 +395,51 @@ defmodule Hwsmartcell do
       const mainSection = ctx.root.querySelector("section");
       const editSection = ctx.root.querySelector("#edit_section");
 
-      editButton.addEventListener("click", () => {
-        mainSection.classList.toggle("hidden");
-        editSection.classList.toggle("hidden");
-      });
-
-      document.getElementById('save_button').addEventListener('click', () => {
-        const problemNumber = document.getElementById('problem_number').value;
-        const problemType = document.getElementById('problem_type').value;
-        const problemStatement = document.getElementById('problem_statement').value;
-        const hint = document.getElementById('hint').value;
-        const solution = document.getElementById('solution').value;
-        const correctAnswer = document.getElementById('correct_answer').value;
-        const testCode = document.getElementById('test_code').value;
-
-        // Update the tabs object with the saved data
-        tabs = {
-          "problem_statement": problemStatement,
-          "hint": hint,
-          "solution": solution
-        };
-
-        ctx.pushEvent('save_edits', {
-          problem_number: problemNumber,
-          problem_type: problemType,
-          problem_statement: problemStatement,
-          hint: hint,
-          solution: solution,
-          correct_answer: correctAnswer,
-          test_code: testCode,
+      // Check if the edit button exists before attaching an event listener
+      if (editButton) {
+        editButton.addEventListener("click", () => {
+          mainSection.classList.toggle("hidden");
+          editSection.classList.toggle("hidden");
         });
+      } else {
+        console.error("Edit button not found");
+      }
 
-        // Switch back to view mode
-        mainSection.classList.toggle("hidden");
-        editSection.classList.toggle("hidden");
-      });
+      const saveButton = document.getElementById('save_button');
+      if (saveButton) {
+        saveButton.addEventListener('click', () => {
+          const problemNumber = document.getElementById('problem_number').value;
+          const problemType = document.getElementById('problem_type').value;
+          const problemStatement = document.getElementById('problem_statement').value;
+          const hint = document.getElementById('hint').value;
+          const solution = document.getElementById('solution').value;
+          const correctAnswer = document.getElementById('correct_answer').value;
+          const testCode = document.getElementById('test_code').value;
+
+          // Update the tabs object with the saved data
+          tabs = {
+            "problem_statement": problemStatement,
+            "hint": hint,
+            "solution": solution
+          };
+
+          ctx.pushEvent('save_edits', {
+            problem_number: problemNumber,
+            problem_type: problemType,
+            problem_statement: problemStatement,
+            hint: hint,
+            solution: solution,
+            correct_answer: correctAnswer,
+            test_code: testCode,
+          });
+
+          // Switch back to view mode
+          mainSection.classList.toggle("hidden");
+          editSection.classList.toggle("hidden");
+        });
+      } else {
+        console.error("Save button not found");
+      }
     }
 
     function displayContent(tab, activeTab, problem_type, ctx, tabs) {
@@ -442,23 +467,28 @@ defmodule Hwsmartcell do
         const textInput = document.getElementById('text_input');
         const submitButton = document.getElementById('submit_button');
 
-        // Event listener for submit button
-        submitButton.addEventListener("click", () => {
-          const inputValue = textInput.value;
-          ctx.pushEvent("check_answer", { input_value: inputValue });
-        });
+        // Ensure that the input and submit button exist before attaching listeners
+        if (textInput && submitButton) {
+          submitButton.addEventListener("click", () => {
+            const inputValue = textInput.value;
+            ctx.pushEvent("check_answer", { input_value: inputValue });
+          });
 
-        // Event listener for "Enter" key press
-        textInput.addEventListener("keydown", (event) => {
-          if (event.key === "Enter") {
-            event.preventDefault();
-            submitButton.click();
-          }
-        });
+          // Event listener for "Enter" key press
+          textInput.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              submitButton.click();
+            }
+          });
+        } else {
+          console.error("Input or submit button not found");
+        }
       } else {
         inputSection.innerHTML = ""; // Clear input section if it's not the problem statement
       }
     }
+
 
 
     """
