@@ -396,13 +396,13 @@ defmodule Hwsmartcell do
       };
 
       //Tab Event Listeners
-      function updateTabListeners() {
-        problemTab.addEventListener("click", () => displayContent("problem_statement", problemTab, payload.problem_type));
-        hintTab.addEventListener("click", () => displayContent("hint", hintTab, payload.problem_type));
-        solutionTab.addEventListener("click", () => displayContent("solution", solutionTab, payload.problem_type));
+      function updateTabListeners(a) {
+        problemTab.addEventListener("click", () => displayContent("problem_statement", problemTab, a));
+        hintTab.addEventListener("click", () => displayContent("hint", hintTab, a));
+        solutionTab.addEventListener("click", () => displayContent("solution", solutionTab, a));
       }
 
-      updateTabListeners();
+      updateTabListeners(payload.problem_type);
 
 
       function displayContent(tab, activeTab, problem_type) {
