@@ -492,7 +492,9 @@ defmodule Hwsmartcell do
         editSection.classList.toggle("hidden");
 
         // Refresh the active tab
-        displayContent('problem_statement', problemTab);
+        //displayContent('problem_statement', problemTab); //LML commenting out to test
+        displayContent('problem_tab'); //LML to match the one below
+
       });
 
       //Event listeners for tabs
