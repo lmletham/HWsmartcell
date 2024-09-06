@@ -481,39 +481,42 @@ defmodule Hwsmartcell do
           test_code: testCode
         });
 
-        ctx.handleEvent("refresh", (payload) => {
-          // Update the payload
-          payload.problem_number = payload.problem_number;
-          payload.problem_type = payload.problem_type;
-          payload.correct_answer = payload.correct_answer;
-          payload.test_code = payload.test_code;
-          payload.show_input_box = payload.show_input_box;
 
-          // Update the header
-          document.getElementById('header').textContent = `Problem ${payload.problem_number}`;
 
-          // Update the tabs with the new content
-          tabs["problem_statement"] = payload.problem_statement;
-          tabs["hint"] = payload.hint;
-          tabs["solution"] = payload.solution;
 
-          // Re-display the current tab content
-          displayContent("problem_statement", problemTab);
-        });
 
-        // Handle feedback events
-        ctx.handleEvent("feedback", ({ message, color }) => {
-          feedbackSection.textContent = message;
-          feedbackSection.className = `mt-4 font-bold ${color}`;
-        });
 
 
         // Switch back to view mode
         mainSection.classList.toggle("hidden");
         editSection.classList.toggle("hidden");
-
       });
 
+      // Handle feedback events
+      ctx.handleEvent("feedback", ({ message, color }) => {
+        feedbackSection.textContent = message;
+        feedbackSection.className = `mt-4 font-bold ${color}`;
+      });
+
+      ctx.handleEvent("refresh", (payload) => {
+        // Update the payload
+        payload.problem_number = payload.problem_number;
+        payload.problem_type = payload.problem_type;
+        payload.correct_answer = payload.correct_answer;
+        payload.test_code = payload.test_code;
+        payload.show_input_box = payload.show_input_box;
+
+        // Update the header
+        document.getElementById('header').textContent = `Problem ${payload.problem_number}`;
+
+        // Update the tabs with the new content
+        tabs["problem_statement"] = payload.problem_statement;
+        tabs["hint"] = payload.hint;
+        tabs["solution"] = payload.solution;
+
+        // Re-display the current tab content
+        displayContent("problem_statement", problemTab);
+      });
     }
     """
   end
