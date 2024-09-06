@@ -431,17 +431,14 @@ defmodule Hwsmartcell do
         }
       }
 
-      problemTab.addEventListener("click", () => displayContent("problem_statement", problemTab));
-      hintTab.addEventListener("click", () => displayContent("hint", hintTab));
-      solutionTab.addEventListener("click", () => displayContent("solution", solutionTab));
 
       // displayContent("problem_statement", problemTab); // LML Show the problem statement by default
       displayContent("problem_statement", document.getElementById('problem_tab'));
 
       // Edit button logic
-      editButton.addEventListener("click", () => {
-        mainSection.classList.toggle("hidden");
-        editSection.classList.toggle("hidden");
+      document.getElementById('edit_button').addEventListener('click', () => {
+        document.querySelector('section').classList.toggle('hidden');
+        document.getElementById('edit_section').classList.toggle('hidden');
       });
 
       // Save button logic
