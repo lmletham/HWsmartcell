@@ -133,7 +133,8 @@ defmodule Hwsmartcell do
     test_code: test_code
   )
 
-    # Process the text with Makeup
+
+      # Process the text with Makeup
     rendered_problem_statement = process_with_makeup(problem_statement)
     rendered_hint = process_with_makeup(hint)
     rendered_solution = process_with_makeup(solution)
