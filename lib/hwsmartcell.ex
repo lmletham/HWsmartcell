@@ -26,7 +26,7 @@ defmodule Hwsmartcell do
     hint = attrs["hint"] || "Try breaking the problem into smaller parts."
     solution = attrs["solution"] || "Atom"
     correct_answer = attrs["correct_answer"] || ""
-    test_code = attrs["test_code"] || ":evaluated"
+    test_code = attrs["test_code"] || ":ok"
 
     # Process the problem statement with Makeup
     rendered_problem_statement = process_with_makeup(problem_statement)
