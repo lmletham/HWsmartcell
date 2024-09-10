@@ -147,18 +147,27 @@ defmodule Hwsmartcell do
   end
 
   defp process_with_makeup(text) do
-    # Use a regex to find code blocks between ```elixir and ``` delimiters
-    Regex.replace(~r/```elixir\n(.+?)\n```/s, text, fn _match, code ->
-      # Apply syntax highlighting
-      highlighted_code = Makeup.highlight(code, lexer: Makeup.Lexers.ElixirLexer)
+    # First, use regex to find and temporarily replace code blocks with placeholders
+    {text_with_placeholders, code_blocks} = Regex.scan(~r/```elixir\n(.+?)\n```/s, text)
+    |> Enum.reduce({text, []}, fn [full_match, code], {text_acc, blocks_acc} ->
+      new_text = String.replace(text_acc, full_match, "CODE_BLOCK_PLACEHOLDER", global: false)
+      {new_text, blocks_acc ++ [code]}
+    end)
 
-      # Perform a safe string replacement for function names and keywords
-      highlighted_code
-      |> String.replace(~r/(?<=[^a-zA-Z0-9_])puts(?=[^a-zA-Z0-9_])/, ~s(<span class="nf">puts</span>))
-      |> String.replace(~r/(?<=[^a-zA-Z0-9_])answer(?=[^a-zA-Z0-9_])/, ~s(<span class="nf">answer</span>))
-      |> (fn hc -> "<pre><code class=\"highlight\">#{hc}</code></pre>" end).()
+    # Process the remaining text as Markdown using Earmark, escaping unsafe HTML
+    html_text = Earmark.as_html!(text_with_placeholders, %Earmark.Options{escape: true})
+
+    # Replace the placeholders with the highlighted code using Makeup and a custom tag <m-code>
+    Enum.reduce(code_blocks, html_text, fn code, acc ->
+      highlighted_code = Makeup.highlight(code, lexer: Makeup.Lexers.ElixirLexer)
+      |> String.replace("<code>", "<m-code>")
+      |> String.replace("</code>", "</m-code>")
+
+      # Replace the first occurrence of the placeholder with the highlighted code
+      String.replace(acc, "CODE_BLOCK_PLACEHOLDER", "<pre><m-code class=\"highlight\">#{highlighted_code}</m-code></pre>", global: false)
     end)
   end
+
 
 
 

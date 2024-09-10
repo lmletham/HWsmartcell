@@ -49,6 +49,26 @@ end
 :evaluated
 ```
 
+# Code example for writing in the Problem Statement. I am now using backticks to get the pill effect.
+```elixir
+What is this *data*
+
+I **need** it
+
+super `bad`
+
+list:
+* sdf 
+* sdf
+* sdfsd `tt`
+
+```elixir
+:tbd
+:testing
+```
+```
+
+
 
 # Code Notes
 Everything working!
