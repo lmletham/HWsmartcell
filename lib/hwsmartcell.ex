@@ -26,7 +26,7 @@ defmodule Hwsmartcell do
     hint = attrs["hint"] || "Try breaking the problem into smaller parts."
     solution = attrs["solution"] || "Atom"
     correct_answer = attrs["correct_answer"] || ""
-    test_code = attrs["test_code"] || ":eval"
+    test_code = attrs["test_code"] || ":evaluated"
 
     # Process the problem statement with Makeup
     rendered_problem_statement = process_with_makeup(problem_statement)
@@ -59,6 +59,7 @@ defmodule Hwsmartcell do
       hint: ctx.assigns.hint,
       solution: ctx.assigns.solution,
       correct_answer: ctx.assigns.correct_answer,
+      test_code: ctx.assigns.test_code,
       makeup_css: ctx.assigns.makeup_css
     }, ctx}
   end
@@ -95,7 +96,7 @@ defmodule Hwsmartcell do
     _ = ~s#{inspect(attrs["correct_answer"], raw: true)}
 
     #Test Code:
-    _ = #{attrs["test_code"]} || ":eval"
+    _ = #{attrs["test_code"]}
     """
   end
 
