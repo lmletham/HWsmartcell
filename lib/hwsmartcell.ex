@@ -10,17 +10,7 @@ defmodule Hwsmartcell do
     problem_statement = attrs["problem_statement"] || """
     What is this data type?
     ```elixir
-    defmodule Test do
-      def answer do
-        #Write your answer below here:
-        :integer
-        var = 2 + 2
-        IO.puts(var)
-        "Hello"
-      end
-    end
-
-    Test.answer()
+    :tbd
     ```
     """
     hint = attrs["hint"] || "Try breaking the problem into smaller parts."
