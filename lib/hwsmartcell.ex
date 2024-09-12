@@ -289,9 +289,9 @@ defmodule Hwsmartcell do
     .highlight .sb { color: #98c379; }
     .highlight .sc { color: #e7e9db; }
     .highlight .sd { color: #776e71; }
-    .highlight .se { color: #f99b15; }
+    .highlight .se { color: #be5046; }
     .highlight .sh { color: #98c379; }
-    .highlight .si { color: #f99b15; }
+    .highlight .si { color: #be5046; }
     .highlight .sr { color: #98c379; }
     .highlight .ss { color: #61afef; }
     .highlight .sx { color: #61afef; } /* String other, also used for sigils */
