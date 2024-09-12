@@ -4,7 +4,7 @@ defmodule Hwsmartcell.MixProject do
   def project do
     [
       app: :hwsmartcell,
-      version: "0.1.23",
+      version: "0.1.24",
       elixir: "~> 1.17",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
